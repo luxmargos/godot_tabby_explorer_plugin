@@ -136,11 +136,9 @@ func _generate_all_docks():
 	_clear_docks()
 	
 	if _get_pref().use_user_config:
-		print("gen user")
 		_generate_docks(_get_user_docks_pref(), _pref.user_config_prefix)
 
 	if _get_pref().use_project_shared_config:
-		print("gen proj")
 		_generate_docks(_get_project_shared_docks_pref(), _pref.project_shared_config_prefix)
 
 func _generate_docks(p_main_pref:SubFSMainPref, p_prefix:String):
