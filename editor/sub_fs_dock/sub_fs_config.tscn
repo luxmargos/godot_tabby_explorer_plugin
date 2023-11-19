@@ -1,0 +1,160 @@
+[gd_scene load_steps=7 format=3 uid="uid://ml08ihwpuksa"]
+
+[ext_resource type="Script" path="res://addons/sub_fs/editor/sub_fs_dock/sub_fs_config.gd" id="1_87stq"]
+[ext_resource type="PackedScene" uid="uid://c81nrsifb1lwy" path="res://addons/sub_fs/editor/sub_fs_dock/sub_fs_config_docks.tscn" id="2_nlk06"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wai55"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 5.0
+bg_color = Color(0.1, 0.1, 0.1, 0.6)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="Image" id="Image_rqwmv"]
+data = {
+"data": PackedByteArray(255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 93, 93, 41, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0),
+"format": "RGBA8",
+"height": 16,
+"mipmaps": false,
+"width": 16
+}
+
+[sub_resource type="ImageTexture" id="ImageTexture_40qj8"]
+image = SubResource("Image_rqwmv")
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xpk20"]
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.345098, 0.345098, 0.345098, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+corner_detail = 4
+
+[node name="config" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_87stq")
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 2
+
+[node name="config_inner" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 15
+theme_override_constants/margin_top = 15
+theme_override_constants/margin_right = 15
+theme_override_constants/margin_bottom = 15
+
+[node name="config_scroll_container" type="ScrollContainer" parent="config_inner"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wai55")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="config_inner/config_scroll_container"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="config_inner/config_scroll_container/VBoxContainer"]
+layout_mode = 2
+
+[node name="Control" type="Control" parent="config_inner/config_scroll_container/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="cancel_btn" type="Button" parent="config_inner/config_scroll_container/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "  Cancel  "
+icon = SubResource("ImageTexture_40qj8")
+
+[node name="Control" type="Control" parent="config_inner/config_scroll_container/VBoxContainer"]
+custom_minimum_size = Vector2(0, 15)
+layout_mode = 2
+
+[node name="options_container" type="VBoxContainer" parent="config_inner/config_scroll_container/VBoxContainer"]
+layout_mode = 2
+
+[node name="option_section" type="Button" parent="config_inner/config_scroll_container/VBoxContainer/options_container"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_xpk20")
+text = "Plugin Options"
+
+[node name="fields" type="VBoxContainer" parent="config_inner/config_scroll_container/VBoxContainer/options_container"]
+layout_mode = 2
+
+[node name="use_user_config_checkbox" type="CheckBox" parent="config_inner/config_scroll_container/VBoxContainer/options_container/fields"]
+layout_mode = 2
+tooltip_text = "Use project shared configuration"
+text = " Use user docks"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="config_inner/config_scroll_container/VBoxContainer/options_container/fields"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="config_inner/config_scroll_container/VBoxContainer/options_container/fields/HBoxContainer"]
+layout_mode = 2
+text = "      Prefix : "
+
+[node name="user_docks_prefix" type="LineEdit" parent="config_inner/config_scroll_container/VBoxContainer/options_container/fields/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+select_all_on_focus = true
+
+[node name="use_project_shared_config_checkbox" type="CheckBox" parent="config_inner/config_scroll_container/VBoxContainer/options_container/fields"]
+layout_mode = 2
+tooltip_text = "Use project shared configuration"
+text = " Use project shared docks"
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="config_inner/config_scroll_container/VBoxContainer/options_container/fields"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="config_inner/config_scroll_container/VBoxContainer/options_container/fields/HBoxContainer2"]
+layout_mode = 2
+text = "      Prefix : "
+
+[node name="project_shared_docks_prefix" type="LineEdit" parent="config_inner/config_scroll_container/VBoxContainer/options_container/fields/HBoxContainer2"]
+layout_mode = 2
+size_flags_horizontal = 3
+select_all_on_focus = true
+
+[node name="Control" type="Control" parent="config_inner/config_scroll_container/VBoxContainer/options_container"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+
+[node name="apply_options_btn" type="Button" parent="config_inner/config_scroll_container/VBoxContainer/options_container"]
+layout_mode = 2
+text = "  Apply  "
+
+[node name="Control2" type="Control" parent="config_inner/config_scroll_container/VBoxContainer/options_container"]
+custom_minimum_size = Vector2(0, 30)
+layout_mode = 2
+
+[node name="user_docks_config" parent="config_inner/config_scroll_container/VBoxContainer" instance=ExtResource("2_nlk06")]
+layout_mode = 2
+title = "Docks (User)"
+
+[node name="Control2" type="Control" parent="config_inner/config_scroll_container/VBoxContainer"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+
+[node name="project_docks_config" parent="config_inner/config_scroll_container/VBoxContainer" instance=ExtResource("2_nlk06")]
+layout_mode = 2
+title = "Docks (Project Shared)"
+
+[node name="Control3" type="Control" parent="config_inner/config_scroll_container/VBoxContainer"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="config_inner/config_scroll_container/VBoxContainer"]
+layout_mode = 2
+alignment = 1

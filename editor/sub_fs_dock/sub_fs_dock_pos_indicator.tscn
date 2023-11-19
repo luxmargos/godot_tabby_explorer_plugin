@@ -1,0 +1,77 @@
+[gd_scene load_steps=2 format=3 uid="uid://bfwtfljmtf72"]
+
+[ext_resource type="Script" path="res://addons/sub_fs/editor/sub_fs_dock/sub_fs_dock_pos_indicator.gd" id="1_umvde"]
+
+[node name="sub_fs_dock_pos_indicator" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+script = ExtResource("1_umvde")
+
+[node name="main" type="GridContainer" parent="."]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 0
+theme_override_constants/h_separation = 0
+theme_override_constants/v_separation = 0
+columns = 5
+
+[node name="left_ul" type="CheckBox" parent="main"]
+layout_mode = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/check_v_offset = 0
+theme_override_constants/outline_size = 0
+
+[node name="left_ur" type="CheckBox" parent="main"]
+layout_mode = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/check_v_offset = 0
+theme_override_constants/outline_size = 0
+
+[node name="Control" type="Control" parent="main"]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+
+[node name="right_ul" type="CheckBox" parent="main"]
+layout_mode = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/check_v_offset = 0
+theme_override_constants/outline_size = 0
+
+[node name="right_ur" type="CheckBox" parent="main"]
+layout_mode = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/check_v_offset = 0
+theme_override_constants/outline_size = 0
+
+[node name="left_bl" type="CheckBox" parent="main"]
+layout_mode = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/check_v_offset = 0
+theme_override_constants/outline_size = 0
+
+[node name="left_br" type="CheckBox" parent="main"]
+layout_mode = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/check_v_offset = 0
+theme_override_constants/outline_size = 0
+
+[node name="Control2" type="Control" parent="main"]
+custom_minimum_size = Vector2(10, 0)
+layout_mode = 2
+
+[node name="right_bl" type="CheckBox" parent="main"]
+layout_mode = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/check_v_offset = 0
+theme_override_constants/outline_size = 0
+
+[node name="right_br" type="CheckBox" parent="main"]
+layout_mode = 2
+theme_override_constants/h_separation = 0
+theme_override_constants/check_v_offset = 0
+theme_override_constants/outline_size = 0

@@ -1,0 +1,233 @@
+class_name SubFSTreeItemWrapper extends RefCounted
+
+const SubFSShare := preload("../../share.gd")
+const SubFSThemeHelper := preload("../../utils/theme_helper.gd")
+
+class SearchResult:
+	var _depth:int = 0
+	var _item:SubFSTreeItemWrapper
+	
+	func _init(p_depth:int, p_item:SubFSTreeItemWrapper):
+		_depth = p_depth
+		_item = p_item
+	
+	func get_depth()->int:
+		return _depth
+		
+	func get_item()->SubFSTreeItemWrapper:
+		return _item
+	
+	func has_item()->bool:
+		return _item != null
+
+signal invalid(p_item:SubFSTreeItemWrapper)
+
+static func as_paths(p_items:Array[SubFSTreeItemWrapper])->PackedStringArray:
+	var paths:PackedStringArray
+	for item in p_items:
+		paths.append(item.get_path())
+
+	return paths
+
+var _fs_item:SubFSItem
+var _tree_item:WeakRef
+var _ref_control:Control
+var _saved_path:String
+var _fs_share:SubFSShare
+
+func post_init(p_fs_share:SubFSShare, p_fs_item:SubFSItem, p_tree_item:TreeItem, p_ref_control:Control):
+	_fs_share = p_fs_share
+	_ref_control = p_ref_control
+	_set_fs_item(p_fs_item)
+	_set_tree_item(p_tree_item)
+
+func _set_fs_item(p_fs_item:SubFSItem):
+	_fs_item = p_fs_item
+	_saved_path = _fs_item.get_path()
+	_fs_item.invalid.connect(_on_fs_item_invalid)
+	
+	if _fs_item.is_dir():
+		var dir_item:SubFSItemDir = _fs_item as SubFSItemDir
+		dir_item.sub_items_updated.connect(_on_sub_items_updated)
+
+func _on_fs_item_invalid(p_item:SubFSItem):
+	invalid.emit(self)
+
+func _on_sub_items_updated(p_item:SubFSItem):
+	_reset_sub_tree_items()
+
+func get_fs_item()->SubFSItem:
+	return _fs_item
+	
+func get_id()->String:
+	return _saved_path
+	
+func get_saved_path()->String:
+	return _saved_path
+
+func _set_tree_item(p_tree_item:TreeItem):
+	_clear_tree_item()
+
+	_tree_item = weakref(p_tree_item)
+	if !has_tree_item():
+		return
+	
+	var ti:TreeItem = get_tree_item()
+
+	ti.set_metadata(0, self)
+	ti.set_text(0, _fs_item.get_name())
+#	ti.disable_folding = !_fs_item.is_expandable()
+	ti.disable_folding = false
+	ti.set_structured_text_bidi_override(0, TextServer.STRUCTURED_TEXT_FILE)
+	ti.set_icon(0, SubFSThemeHelper.find_tree_item_icon(_ref_control, self)) 
+	ti.set_icon_modulate(0, SubFSThemeHelper.find_tree_item_icon_color(_ref_control, self))
+	ti.collapsed = true
+	
+	_fs_share.get_resource_previewer().queue_resource_preview(get_path(), self, "_tree_thumbnail_done", null)
+	
+	_reset_sub_tree_items()
+
+func get_tree_item()->TreeItem:
+	if _tree_item == null:
+		return null
+	return _tree_item.get_ref()
+	
+func has_tree_item()->bool:
+	return get_tree_item() != null
+
+func _tree_thumbnail_done(p_path:String, p_preview:Texture2D, p_small_preview:Texture2D, p_udata:Variant):
+#	if !p_small_preview.is_valid():
+#		return
+	
+	if p_small_preview == null:
+		return
+
+	if !has_tree_item() or is_dir():
+		return
+
+	var ti:TreeItem = get_tree_item()
+	ti.set_icon(0, p_small_preview)
+
+func _clear_tree_item():
+	_clear_sub_tree_items()
+	if !has_tree_item():
+		return
+
+	var ti := get_tree_item()
+	
+	if ti.get_parent() != null:
+		ti.get_parent().remove_child(ti)
+		ti.free()
+	_tree_item = null
+
+func _clear_sub_tree_items():
+	if !has_tree_item():
+		return
+
+	var ti := get_tree_item()
+	for child in ti.get_children():
+		ti.remove_child(child)
+		child.free()
+
+func _reset_sub_tree_items():
+	_clear_sub_tree_items()
+	
+	if !has_tree_item():
+		return
+	
+	var ti := get_tree_item()
+	if _fs_item.is_dir():
+		var dir_item:SubFSItemDir = _fs_item as SubFSItemDir
+		for sub_item in dir_item.get_sub_items():
+			var child_wrapper := SubFSTreeItemWrapper.new()
+			var child_tree_item := ti.create_child()
+			child_wrapper.post_init(_fs_share, sub_item, child_tree_item, _ref_control)
+		ti.disable_folding = !_fs_item.is_expandable()
+	else:
+		ti.disable_folding = true
+
+func is_dir()->bool:
+	return _fs_item.is_dir()
+
+func get_tree_item_children()->Array[TreeItem]:
+	if !has_tree_item():
+		return []
+		
+	return get_tree_item().get_children()
+
+func get_parent_tree_item()->TreeItem:
+	return get_tree_item().get_parent()
+
+func is_expandable()->bool:
+	return _fs_item.is_expandable()
+
+func get_path()->String:
+	return _fs_item.get_path()
+	
+func get_os_path()->String:
+	return _fs_item.get_os_path()
+	
+func get_name()->String:
+	return _fs_item.get_name()
+	
+func _inter_find_item(p_target_path:String, p_find_alt_dir:bool, p_search_depth:int)->SearchResult:
+#	print("_inter_find_item : ", p_target_path)
+	if !_fs_item.is_starts_with(p_target_path):
+		return SearchResult.new(p_search_depth, null)
+
+	if _fs_item.is_match(p_target_path):
+#		print("matched : ", p_target_path, ", ", get_path())
+		return SearchResult.new(p_search_depth, self)
+
+	if !_fs_item.is_dir():
+#		print("not dir : ", get_path())
+		return SearchResult.new(p_search_depth, null)
+	
+	if _fs_item.is_expandable():
+		var next_depth:int = p_search_depth + 1
+		var deepest_depth:int = next_depth
+		
+		var sub_item_result:SearchResult = null
+		for sub_item in get_tree_item_children():
+	#			print("find sub from : ", p_search_depth, ",", sub_item.get_path())
+			var sub_item_wrapper:SubFSTreeItemWrapper = sub_item.get_metadata(0)
+			var result := sub_item_wrapper._inter_find_item(p_target_path, p_find_alt_dir, next_depth)
+			deepest_depth = maxi(result.get_depth(), deepest_depth)
+			if result.has_item():
+				sub_item_result = result
+				break
+
+		if sub_item_result != null and sub_item_result.has_item():
+#			print("found item in sub item : ", sub_item_result.get_item().get_path())
+			return sub_item_result
+		
+		if p_find_alt_dir and deepest_depth == next_depth:
+#			print("use relative alt dir : ", get_path())
+			return SearchResult.new(p_search_depth, self)
+
+	if p_find_alt_dir:
+#		print("use alt dir : ", get_path())
+		return SearchResult.new(p_search_depth, self)
+
+	return SearchResult.new(p_search_depth, null)
+
+func find_item(p_target_path:String, p_find_alt_dir:bool, p_search_depth:int)->SubFSTreeItemWrapper:
+	return _inter_find_item(p_target_path, p_find_alt_dir, p_search_depth).get_item()
+	
+func find_tree_item(p_target_path:String, p_find_alt_dir:bool, p_search_depth:int)->TreeItem:
+	return find_item(p_target_path, p_find_alt_dir, p_search_depth).get_tree_item()
+
+func is_uid_owner(p_uid_text:String)->bool:
+	return _fs_item.is_uid_owner(p_uid_text)
+
+func find_item_by_uid_text(p_uid_text:String)->SubFSTreeItemWrapper:
+	if is_uid_owner(p_uid_text):
+		return self
+	
+	for sub_tree_item in get_tree_item_children():
+		var sub_item_wrapper:SubFSTreeItemWrapper = sub_tree_item.get_metadata(0)
+		var sub_item_result:SubFSTreeItemWrapper = sub_item_wrapper.find_item_by_uid_text(p_uid_text)
+		if sub_item_result != null:
+			return sub_item_result
+
+	return null
