@@ -147,6 +147,7 @@ func _generate_docks(p_main_pref:SubFSMainPref, p_prefix:String):
 		sub_fs_dock.global_pref_updated.connect(_on_global_pref_updated)
 		sub_fs_dock.user_docks_updated.connect(_on_global_pref_updated)
 		sub_fs_dock.project_shared_docks_updated.connect(_on_global_pref_updated)
+		sub_fs_dock.saved_tab_selections_updated.connect(_on_saved_tab_selections_updated)
 
 		add_control_to_dock(dock_pref.dock_pos, sub_fs_dock)
 		
@@ -158,6 +159,9 @@ func _clear_docks():
 func _on_dock_pref_updated():
 	_save_user_docks_pref()
 	_save_project_shared_docks_pref()
+
+func _on_saved_tab_selections_updated():
+	_save_pref()
 
 func _on_global_pref_updated():
 	_save_pref()

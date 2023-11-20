@@ -47,6 +47,7 @@ var _last_clicked_idx:int = -1
 var _last_clicked_time:float = 0
 
 signal global_pref_updated
+signal saved_tab_selections_updated
 signal user_docks_updated
 signal project_shared_docks_updated
 signal pref_updated
@@ -220,15 +221,24 @@ func generate_tabs():
 
 	for tab_pref in _pref.tabs:
 		_tab_bar.add_tab(tab_pref.name)
-		var tab_content:SubFSTabContent = TabContentPackedScene.instantiate()
-		_tab_container.add_child(tab_content)
-		tab_content.post_init(_fs_share, _global_pref, _main_pref, tab_pref, _fs_manager_node)
-		tab_content.pref_updated.connect(_on_tab_content_pref_updated)
+		_create_tab(tab_pref)
 
 	for i in range(tab_count_to_remove):
 		_remove_tab(0, false)
 	_tab_bar.current_tab = _pref.selected_tab
 	_tab_container.current_tab = _pref.selected_tab
+
+func _create_tab(p_tab_pref:SubFSTabContentPref)->SubFSTabContent:
+	var tab_content:SubFSTabContent = TabContentPackedScene.instantiate()
+	_tab_container.add_child(tab_content)
+	tab_content.post_init(_fs_share, _global_pref, _main_pref, p_tab_pref, _fs_manager_node)
+	tab_content.pref_updated.connect(_on_tab_content_pref_updated)
+	tab_content.saved_tab_selections_updated.connect(_on_saved_tab_selections_updated)
+
+	return tab_content
+	
+func _on_saved_tab_selections_updated():
+	saved_tab_selections_updated.emit()
 
 func _remove_tab(p_idx:int, p_apply_pref:int):
 	_tab_bar.remove_tab(p_idx)
@@ -249,10 +259,7 @@ func add_new_tab(p_notify:bool):
 	
 	_tab_bar.add_tab(new_tab_name)
 
-	var tab_content:SubFSTabContent = TabContentPackedScene.instantiate()
-	_tab_container.add_child(tab_content)
-	tab_content.post_init(_fs_share, _global_pref, _main_pref, tab_pref, _fs_manager_node)
-	tab_content.pref_updated.connect(_on_tab_content_pref_updated)
+	_create_tab(tab_pref)
 	_tab_bar.current_tab = new_tab_index
 	_tab_container.current_tab = new_tab_index
 

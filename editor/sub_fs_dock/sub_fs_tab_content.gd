@@ -90,6 +90,7 @@ var _is_filter_mode:bool = false
 var _was_filter_mode:bool = false
 
 signal pref_updated
+signal saved_tab_selections_updated
 
 func _ready():
 	focus_entered.connect(_on_focus_entered)
@@ -471,6 +472,9 @@ func reset_list(p_tag:String):
 
 func _notify_pref_updated():
 	pref_updated.emit()
+	
+func _notify_saved_tab_selections_updated():
+	saved_tab_selections_updated.emit()
 
 func find_and_select_item(p_target_path:String, p_find_alt_dir:bool, p_expand:bool, p_reset:bool, p_notify:bool):
 	if !has_list():
@@ -529,7 +533,7 @@ func set_selected_path(p_path:String, p_notify:bool):
 
 	_global_pref.set_saved_selection(_tab_pref.tab_id, p_path)
 	if p_notify:
-		_notify_pref_updated()
+		_notify_saved_tab_selections_updated()
 
 func _on_focus_entered():
 	pass
