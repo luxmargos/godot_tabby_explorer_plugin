@@ -22,6 +22,8 @@ const SubFSPref := preload("../pref.gd")
 const SubFSFolderCreateDialog := preload("./popups/folder_create_dialog.gd")
 const SubFSRemoveDialog := preload("./popups/remove_dialog.gd")
 
+const SubFSContext := preload("./item/context.gd")
+
 enum PopupActions {
 	FILE_NEW,
 	FILE_NEW_FOLDER,
@@ -71,6 +73,7 @@ var _pin_btn:Button
 var _post_selection_fs_dock_btn:Button
 var _sel_item_info_expand_btn:Button
 
+var _filter_edit:LineEdit
 var _tree:Tree
 var _selected_item:SubFSTreeItemWrapper
 var _selected_items:Dictionary
@@ -83,6 +86,8 @@ var _remove_dialog:SubFSRemoveDialog
 var _recreation_trigger:float = 0.0
 
 var _saved_uncollapsed_paths:PackedStringArray
+var _is_filter_mode:bool = false
+var _was_filter_mode:bool = false
 
 signal pref_updated
 
@@ -136,6 +141,10 @@ func _ready():
 	_sel_item_info_expand_btn.icon = get_theme_icon("TripleBar", "EditorIcons")
 	_sel_item_info_expand_btn.text = ""
 	
+	_filter_edit = get_node("filter_cont/filter_edit")
+	_filter_edit.text = ""
+	_filter_edit.text_changed.connect(_on_filter_edit_text_changed)
+	
 	_tree = get_node("tree")
 	_tree.gui_input.connect(_on_tree_gui_input)
 	_tree.multi_selected.connect(_on_tree_item_multi_selected)
@@ -172,7 +181,7 @@ func _on_visibility_changed():
 		reset_list("_on_visibility_changed")
 
 func _process(delta):
-	if _root_wrapper == null:
+	if !has_list():
 		_recreation_trigger += delta
 		if _recreation_trigger >= 0.3:
 			_recreation_trigger = 0
@@ -204,7 +213,16 @@ func get_remove_dialog()->SubFSRemoveDialog:
 	add_child(_remove_dialog)
 	_remove_dialog.job_complete.connect(_on_remove_dialog_job_complete)
 	return _remove_dialog
-	
+
+func _on_filter_edit_text_changed(p_text:String):
+	_was_filter_mode = _is_filter_mode
+	_is_filter_mode = !p_text.is_empty()
+
+	reset_list("_on_filter_edit_text_changed")
+
+func _get_filter_text()->String:
+	return _filter_edit.text
+
 func _on_sel_item_path_copy_btn_pressed():
 	DisplayServer.clipboard_set(_sel_item_path_edit.text)
 	
@@ -384,8 +402,12 @@ func _on_fs_gen():
 	reset_list("_on_fs_gen")
 
 func _clear_list():
-	if _root_wrapper != null:
-		_saved_uncollapsed_paths = get_uncollapsed_paths()
+	if has_list():
+		#in the filter mode, keep uncollapsed paths to restore when it finishes
+#		if !_is_filter_mode and !_was_filter_mode:
+		if !_was_filter_mode:
+			_saved_uncollapsed_paths = get_uncollapsed_paths()
+
 		_clear_selection()
 		_tree.clear()
 		_root_wrapper = null
@@ -394,8 +416,11 @@ func _on_item_invalid(p_item:SubFSTreeItemWrapper):
 #	print("_on_item_invalid : ", p_item.get_id())
 	_clear_list()
 
+func has_list()->bool:
+	return _root_wrapper != null
+
 func reset_list(p_tag:String):
-#	print("reset_list_attemptd : ", p_tag)
+	print(get_instance_id(), ", reset_list_attemptd : ", p_tag)
 	_clear_list()
 	refresh_selected_path()
 	refresh_pin_btn()
@@ -412,14 +437,14 @@ func reset_list(p_tag:String):
 #		print("no root fs")
 		return
 		
-#	print("start reset_list : ", p_tag)
+	print(get_instance_id(), ", start reset_list : ", p_tag)
 
 	_root_wrapper = null
 	var tab_root_item:SubFSItem = null
 	if !_tab_pref.pinned_path.is_empty() and _tab_pref.pinned_path.is_absolute_path():
 		var pinned_path:String = _tab_pref.pinned_path
 		tab_root_item = root_fs_item.find_item(pinned_path, false, 0)
-		
+
 		if tab_root_item != null:
 			if !tab_root_item.is_dir():
 				tab_root_item = tab_root_item.get_parent()
@@ -431,18 +456,25 @@ func reset_list(p_tag:String):
 #		print("tab_root_item is invalid!")
 		return
 
+	var context:SubFSContext = SubFSContext.new()
+	context.set_filter_text(_get_filter_text())
 #	print("tab_root_item : ", tab_root_item.get_path(), ", selected_path : ", _selected_path)
 	var tab_root_tree_item:TreeItem = _tree.create_item()
 	_root_wrapper = SubFSTreeItemWrapper.new()
-	_root_wrapper.post_init(_fs_share, tab_root_item, tab_root_tree_item, self)
+	_root_wrapper.post_init(context, _fs_share, tab_root_item, tab_root_tree_item, self)
 	tab_root_tree_item.collapsed = false
+	tab_root_tree_item.visible = true
 
 #	_tree.hide_root = _root_wrapper.get_fs_item().is_root_item()
 
 	_root_wrapper.invalid.connect(_on_item_invalid)
-	find_and_select_item(_selected_path, true, true, false, false)
-	restore_uncollapsed_paths()
 
+	if !_is_filter_mode:
+		find_and_select_item(_selected_path, true, true, false, false)
+		restore_uncollapsed_paths()
+	else:
+		find_and_select_item(_selected_path, false, true, false, false)
+		
 	refresh_selected_path()
 	refresh_pin_btn()
 	_refresh_sel_info_expand()
@@ -453,22 +485,23 @@ func _notify_pref_updated():
 	pref_updated.emit()
 
 func find_and_select_item(p_target_path:String, p_find_alt_dir:bool, p_expand:bool, p_reset:bool, p_notify:bool):
-	if _root_wrapper == null:
+	if !has_list():
 #		print("error: no root wrapper")
 		return
 
 	if p_target_path.is_empty():
 		p_target_path = _root_wrapper.get_path()
 		
-#	print("find_and_select_item : ", p_target_path, ", expand : ", p_expand, ", reset : ", p_reset)
+	print("find_and_select_item : ", p_target_path, ", expand : ", p_expand, ", reset : ", p_reset)
 		
 	var found_item:SubFSTreeItemWrapper = _root_wrapper.find_item(p_target_path, p_find_alt_dir, 0)
-	if found_item == null:
+	if found_item == null and p_find_alt_dir:
 		found_item = _root_wrapper
-#		print("not found! replace to root wrapper")
+		print("not found! replace to root wrapper")
 
-#	print("found_item : ", found_item.get_path())
-	_select_item_wrapper(found_item, p_expand, p_reset, p_notify)
+	if found_item != null:
+		print("found_item : ", found_item.get_path())
+		_select_item_wrapper(found_item, p_expand, p_reset, p_notify)
 
 func _select_item_wrapper(p_item:SubFSTreeItemWrapper, p_expand:bool, p_reset:bool, p_notify:bool):
 	if p_notify:
@@ -491,9 +524,10 @@ func _select_item_wrapper(p_item:SubFSTreeItemWrapper, p_expand:bool, p_reset:bo
 			p_item.get_parent_tree_item().uncollapse_tree()
 
 	refresh_selected_path()
-	_tree.scroll_to_item(p_item.get_tree_item())
+	if p_notify:
+		_tree.scroll_to_item(p_item.get_tree_item())
 	_tree.queue_redraw()
-		
+	
 func _clear_selection():
 	_tree.deselect_all()
 	_selected_items.clear()
@@ -592,7 +626,6 @@ func _get_selected_items_as_array()->Array[SubFSTreeItemWrapper]:
 	var result:Array[SubFSTreeItemWrapper]
 	result.assign(_selected_items.values())
 	return result
-	
 
 func _tree_rmb_option(p_id:PopupActions):
 	if p_id == PopupActions.FILE_NEW_FOLDER:
@@ -692,6 +725,8 @@ func _get_drag_data(at_position):
 	return drag_data
 
 func _notification(what):
+	return
+
 	if what == NOTIFICATION_DRAG_BEGIN:
 		var dd:Dictionary = get_viewport().gui_get_drag_data()
 		if _tree.is_visible_in_tree() and dd.has("type"):
@@ -811,7 +846,6 @@ func get_uncollapsed_paths()->PackedStringArray:
 	return result
 
 func restore_uncollapsed_paths():
-#	print("restore_uncollapsed_paths")
 	var root_item:TreeItem = _tree.get_root()
 	if root_item == null:
 		return
@@ -827,7 +861,6 @@ func restore_uncollapsed_paths():
 			if idx >= 0:
 				_saved_uncollapsed_paths.remove_at(idx)
 				item.collapsed = false
-#				print("restore : ", wrapper.get_path())
 
 		for i in range(item.get_child_count()):
 			loop_item.append(item.get_child(i))

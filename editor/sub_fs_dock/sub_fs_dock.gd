@@ -214,7 +214,7 @@ func post_init(p_share:SubFSShare,
 	_main_project_shared_pref = p_main_project_shared_pref
 
 func generate_tabs():
-#	print("generate_tabs")
+	print("generate_tabs")
 	var tab_count_to_remove:int = _tab_bar.tab_count
 	
 	if _pref.tabs.is_empty():
