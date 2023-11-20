@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://addons/sub_fs/editor/sub_fs_dock/sub_fs_tab_content.gd" id="1_te6h5"]
 
-[sub_resource type="Image" id="Image_7adbm"]
+[sub_resource type="Image" id="Image_iamal"]
 data = {
 "data": PackedByteArray(255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 93, 93, 41, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0),
 "format": "RGBA8",
@@ -11,8 +11,8 @@ data = {
 "width": 16
 }
 
-[sub_resource type="ImageTexture" id="ImageTexture_8rvvf"]
-image = SubResource("Image_7adbm")
+[sub_resource type="ImageTexture" id="ImageTexture_nlale"]
+image = SubResource("Image_iamal")
 
 [node name="TabContent" type="VBoxContainer"]
 anchors_preset = 15
@@ -46,10 +46,16 @@ size_flags_horizontal = 3
 [node name="path_body" type="HBoxContainer" parent="toolbar/item_info"]
 layout_mode = 2
 
+[node name="Label" type="Label" parent="toolbar/item_info/path_body"]
+visible = false
+layout_mode = 2
+vertical_alignment = 1
+
 [node name="copy_res_path_btn" type="Button" parent="toolbar/item_info/path_body"]
+visible = false
 layout_mode = 2
 tooltip_text = "Copy resource path to clipboard"
-icon = SubResource("ImageTexture_8rvvf")
+icon = SubResource("ImageTexture_nlale")
 
 [node name="res_path_edit" type="LineEdit" parent="toolbar/item_info/path_body"]
 layout_mode = 2
@@ -63,7 +69,7 @@ layout_mode = 2
 layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Pin specific folder"
-icon = SubResource("ImageTexture_8rvvf")
+icon = SubResource("ImageTexture_nlale")
 icon_alignment = 1
 
 [node name="pin_btn" type="Button" parent="toolbar/item_info/path_body/tools"]
@@ -71,7 +77,7 @@ layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Pin specific folder"
 toggle_mode = true
-icon = SubResource("ImageTexture_8rvvf")
+icon = SubResource("ImageTexture_nlale")
 icon_alignment = 1
 
 [node name="post_selection_fs_dock_btn" type="Button" parent="toolbar/item_info/path_body/tools"]
@@ -79,7 +85,7 @@ layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Attempt to navigate to the currently selected item in the Editor's default FileSystem Dock"
 toggle_mode = true
-icon = SubResource("ImageTexture_8rvvf")
+icon = SubResource("ImageTexture_nlale")
 icon_alignment = 1
 
 [node name="expand_btn" type="Button" parent="toolbar/item_info/path_body/tools"]
@@ -87,7 +93,7 @@ layout_mode = 2
 size_flags_vertical = 0
 tooltip_text = "Expand/Collapse to reveal additional information"
 toggle_mode = true
-icon = SubResource("ImageTexture_8rvvf")
+icon = SubResource("ImageTexture_nlale")
 icon_alignment = 1
 
 [node name="more_info_cont" type="GridContainer" parent="toolbar/item_info"]
@@ -101,6 +107,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [node name="Label" type="Label" parent="toolbar/item_info/more_info_cont/uid_body"]
+visible = false
 layout_mode = 2
 text = "UID"
 vertical_alignment = 1
@@ -109,11 +116,12 @@ vertical_alignment = 1
 visible = false
 layout_mode = 2
 tooltip_text = "Copy resource UID to clipboard"
-icon = SubResource("ImageTexture_8rvvf")
+icon = SubResource("ImageTexture_nlale")
 
 [node name="edit" type="LineEdit" parent="toolbar/item_info/more_info_cont/uid_body"]
 layout_mode = 2
 size_flags_horizontal = 3
+placeholder_text = "UID"
 select_all_on_focus = true
 
 [node name="name_body" type="HBoxContainer" parent="toolbar/item_info/more_info_cont"]
@@ -129,11 +137,12 @@ vertical_alignment = 1
 visible = false
 layout_mode = 2
 tooltip_text = "Copy resource UID to clipboard"
-icon = SubResource("ImageTexture_8rvvf")
+icon = SubResource("ImageTexture_nlale")
 
 [node name="edit" type="LineEdit" parent="toolbar/item_info/more_info_cont/name_body"]
 layout_mode = 2
 size_flags_horizontal = 3
+placeholder_text = "NAME"
 editable = false
 select_all_on_focus = true
 

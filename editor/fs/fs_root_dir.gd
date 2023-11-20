@@ -9,7 +9,6 @@ func get_name()->String:
 		return fs_name
 	
 	return "res://"
-#	return get_path()
 
 func is_root_item()->bool:
 	return true
