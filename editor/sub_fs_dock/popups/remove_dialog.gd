@@ -73,13 +73,10 @@ func _on_confirmed():
 			continue
 
 		var os_path:String = ProjectSettings.globalize_path(item)
-#		print("remove_path : ", item, "->", os_path)
 		var err := OS.move_to_trash(os_path)
 		if err != OK:
-#			print(os_path, ", Remove failed with error code => ", err)
 			pass
 		else:
-#			print(os_path, ", Removed!")
 			pass
 
 	_fs_share.scan("Remove Dialog")

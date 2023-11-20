@@ -39,7 +39,6 @@ func _generate():
 	if base_fs.get_subdir_count() < 1 and base_fs.get_file_count() < 1:
 		var base_path:String = base_fs.get_path()
 		if DirAccess.get_files_at(base_path).size() > 0 or DirAccess.get_directories_at(base_path).size() > 0:
-#			print(pref.name, ", cancel invalid base folder")
 			return
 
 	_root_item = SubFSItemRootDir.new()
@@ -49,7 +48,6 @@ func _generate():
 	fs_generated.emit()
 
 func _on_root_item_invalid(p_item:SubFSItem):
-	print("_on_root_item_invalid")
 	_generate()
 
 func _process(delta):
@@ -57,7 +55,6 @@ func _process(delta):
 		_recreation_trigger += delta
 		if _recreation_trigger >= 0.5:
 			_recreation_trigger = 0
-#			print("trigger_reset_list")
 			_generate()
 
 func get_root_item()->SubFSItemRootDir:

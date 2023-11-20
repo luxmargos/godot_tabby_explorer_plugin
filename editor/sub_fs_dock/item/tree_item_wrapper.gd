@@ -117,7 +117,6 @@ func _fetch_preview():
 	_fs_share.get_resource_previewer().queue_resource_preview(get_path(), self, "_tree_thumbnail_done", null)
 	
 func reset_post_state():
-#	print("reset_post_state : ", get_path())
 	if !has_tree_item():
 		return
 		
@@ -133,7 +132,6 @@ func reset_post_state():
 		return
 
 	ti.visible = _is_filter_match
-#	print("is_filter_match : ", get_path(), ", ", _is_filter_match)
 	if _is_filter_match:
 		_fetch_preview()
 
@@ -206,9 +204,6 @@ func _reset_sub_tree_items():
 			child_wrapper.post_init(_context, _fs_share, sub_item, child_tree_item, _ref_control)
 
 	reset_post_state()
-#		ti.disable_folding = !_fs_item.is_expandable()
-#	else:
-#		ti.disable_folding = true
 
 func is_dir()->bool:
 	return _fs_item.is_dir()
@@ -235,16 +230,13 @@ func get_name()->String:
 	return _fs_item.get_name()
 	
 func _inter_find_item(p_target_path:String, p_find_alt_dir:bool, p_search_depth:int)->SearchResult:
-#	print("_inter_find_item : ", p_target_path)
 	if !_fs_item.is_starts_with(p_target_path):
 		return SearchResult.new(p_search_depth, null)
 
 	if _fs_item.is_match(p_target_path):
-#		print("matched : ", p_target_path, ", ", get_path())
 		return SearchResult.new(p_search_depth, self)
 
 	if !_fs_item.is_dir():
-#		print("not dir : ", get_path())
 		return SearchResult.new(p_search_depth, null)
 	
 	if _fs_item.is_expandable():
@@ -253,7 +245,6 @@ func _inter_find_item(p_target_path:String, p_find_alt_dir:bool, p_search_depth:
 		
 		var sub_item_result:SearchResult = null
 		for sub_item in get_tree_item_children():
-	#			print("find sub from : ", p_search_depth, ",", sub_item.get_path())
 			var sub_item_wrapper:SubFSTreeItemWrapper = sub_item.get_metadata(0)
 			var result := sub_item_wrapper._inter_find_item(p_target_path, p_find_alt_dir, next_depth)
 			deepest_depth = maxi(result.get_depth(), deepest_depth)
@@ -262,15 +253,12 @@ func _inter_find_item(p_target_path:String, p_find_alt_dir:bool, p_search_depth:
 				break
 
 		if sub_item_result != null and sub_item_result.has_item():
-#			print("found item in sub item : ", sub_item_result.get_item().get_path())
 			return sub_item_result
 		
 		if p_find_alt_dir and deepest_depth == next_depth:
-#			print("use relative alt dir : ", get_path())
 			return SearchResult.new(p_search_depth, self)
 
 	if p_find_alt_dir:
-#		print("use alt dir : ", get_path())
 		return SearchResult.new(p_search_depth, self)
 
 	return SearchResult.new(p_search_depth, null)

@@ -89,18 +89,15 @@ func is_starts_with(p_target_path:String)->bool:
 	if item_components.size() > paths_components.size():
 		return false
 		
-#	print("start compare : ", p_target_path, "," ,item_path)
 	var is_begins_with:bool = true
 	for i in range(paths_components.size()):
 		var pc:String = paths_components[i]
 		if i >= item_components.size():
 			break
 		var ic = item_components[i]
-#		print("compare : ", pc, "," ,ic)
 		if pc != ic:
 			is_begins_with = false
 			break
-#	print("is_begins_with : ", is_begins_with)
 
 	return is_begins_with
 	
@@ -139,7 +136,6 @@ func _inter_find_item(p_target_path:String, p_find_alt_dir:bool, p_search_depth:
 		
 		var sub_item_result:SearchResult = null
 		for sub_item in get_sub_items():
-	#			print("find sub from : ", p_search_depth, ",", sub_item.get_path())
 			var result := sub_item._inter_find_item(p_target_path, p_find_alt_dir, next_depth)
 			deepest_depth = maxi(result.get_depth(), deepest_depth)
 			if result.has_item():
@@ -147,15 +143,12 @@ func _inter_find_item(p_target_path:String, p_find_alt_dir:bool, p_search_depth:
 				break
 
 		if sub_item_result != null and sub_item_result.has_item():
-	#			print(pref.name, ", found item : ", sub_item_result.get_item().get_path())
 			return sub_item_result
 	
 		if p_find_alt_dir and deepest_depth == next_depth:
-	#			print(pref.name, ", use relative alt dir : ", p_target_item.get_path())
 			return SearchResult.new(p_search_depth, self)
 
 	if p_find_alt_dir:
-#		print(pref.name, ", use alt dir : ", p_target_item.get_path())
 		return SearchResult.new(p_search_depth, self)
 
 	return SearchResult.new(p_search_depth, null)

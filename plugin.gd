@@ -30,14 +30,12 @@ var _sub_fs_share:SubFSShare
 func _get_pref()->SubFSPref:
 	if _pref == null:
 		if ResourceLoader.exists(PREF_FILE):
-#			print("load pref")
 			_pref = ResourceLoader.load(PREF_FILE)
 		else:
 			if !DirAccess.dir_exists_absolute(PREF_DIR):
 				DirAccess.make_dir_recursive_absolute(PREF_DIR)
 
 				if !ResourceLoader.exists(PREF_FILE_IGNORE):
-#					print("write gitignore")
 					var git_ignore:FileAccess = FileAccess.open(PREF_FILE_IGNORE, FileAccess.WRITE)
 					git_ignore.store_string(PREF_FILE_NAME)
 					git_ignore.close()
@@ -52,11 +50,9 @@ func _save_pref():
 	ResourceSaver.save(_get_pref())
 
 func _save_user_docks_pref():
-#	print("SAVE PREF")
 	ResourceSaver.save(_get_user_docks_pref())
 	
 func _save_project_shared_docks_pref():
-#	print("SAVE PREF")
 	ResourceSaver.save(_get_project_shared_docks_pref())
 
 func _get_user_docks_pref_save_dir()->String:
@@ -97,7 +93,6 @@ func _get_project_shared_docks_pref()->SubFSMainPref:
 	return _project_shared_docks_pref
 
 func _load_main_pref(p_path:String)->SubFSMainPref:
-#	print("target_file : ", target_file)
 	var result:SubFSMainPref = null
 	if ResourceLoader.exists(p_path):
 		result = ResourceLoader.load(p_path)
@@ -156,7 +151,6 @@ func _generate_docks(p_main_pref:SubFSMainPref, p_prefix:String):
 		add_control_to_dock(dock_pref.dock_pos, sub_fs_dock)
 		
 func _clear_docks():
-#	print("clear docks")
 	for dock in _all_docks:
 		remove_control_from_docks(dock)
 	_all_docks.clear()

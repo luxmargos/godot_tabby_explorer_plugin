@@ -74,7 +74,7 @@ func _on_make_dir_confirmed():
 
 	var error := DirAccess.make_dir_recursive_absolute(dir_path)
 	if error != OK:
-		print(error)
+		pass
 
 	if _fs_share == null:
 		return

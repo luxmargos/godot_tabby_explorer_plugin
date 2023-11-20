@@ -80,12 +80,7 @@ func _ready():
 	
 	visibility_changed.connect(_on_visibility_changed)
 	
-#	_tab_bar.clear_tabs()
-#	for child in _tabbar_container.get_children():
-#		child.queue_free()
-	
 	if _pref == null:
-#		print("SubFSDockPref is required!")
 		return
 
 	generate_tabs()
@@ -214,18 +209,15 @@ func post_init(p_share:SubFSShare,
 	_main_project_shared_pref = p_main_project_shared_pref
 
 func generate_tabs():
-	print("generate_tabs")
 	var tab_count_to_remove:int = _tab_bar.tab_count
 	
 	if _pref.tabs.is_empty():
 		add_new_tab(true)
 		
 		for i in range(tab_count_to_remove):
-#			print("remove old tab : ", i)
 			_remove_tab(0, false)
 		return
 
-#	print("gen tab : ", fs_share)
 	for tab_pref in _pref.tabs:
 		_tab_bar.add_tab(tab_pref.name)
 		var tab_content:SubFSTabContent = TabContentPackedScene.instantiate()
@@ -234,13 +226,11 @@ func generate_tabs():
 		tab_content.pref_updated.connect(_on_tab_content_pref_updated)
 
 	for i in range(tab_count_to_remove):
-#		print("remove old tab : ", i)
 		_remove_tab(0, false)
 	_tab_bar.current_tab = _pref.selected_tab
 	_tab_container.current_tab = _pref.selected_tab
 
 func _remove_tab(p_idx:int, p_apply_pref:int):
-#	print("remove_tab : ", p_idx, p_apply_pref)
 	_tab_bar.remove_tab(p_idx)
 	_tab_container.get_child(p_idx).queue_free()
 	if p_apply_pref:
@@ -248,7 +238,6 @@ func _remove_tab(p_idx:int, p_apply_pref:int):
 		pref_updated.emit()
 	
 func add_new_tab(p_notify:bool):
-#	print("ADD TAB : ", p_notify)
 	var new_tab_index:int = _tab_bar.tab_count
 	var new_tab_name:String = TextHelper.get_tab_name(new_tab_index)
 	

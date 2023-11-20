@@ -294,14 +294,12 @@ func _on_item_mouse_selected(position: Vector2, mouse_button_index: int):
 	_tree_popup.popup()
 	
 func _on_tree_button_clicked(p_item:TreeItem, column: int, id: int, mouse_button_index: int):
-#	print("_on_tree_button_clicked : ", p_item)
 	pass
 
 func _on_tree_item_multi_selected(p_item:TreeItem, p_column: int, p_selected: bool):
 	_update_selection(p_item, p_column, p_selected, true)
 
 func _update_selection(p_item:TreeItem, p_column: int, p_selected: bool, p_by_click:bool):
-#	print("_on_tree_item_multi_selected : ", p_item.get_metadata(0).get_path(), ", ", p_column, ",", p_selected)
 	var wrapper:SubFSTreeItemWrapper = p_item.get_metadata(0)
 	if p_selected:
 		_selected_items[wrapper.get_instance_id()] = wrapper
@@ -316,9 +314,6 @@ func _update_selection(p_item:TreeItem, p_column: int, p_selected: bool, p_by_cl
 		
 	if _selected_items.is_empty():
 		_selected_item = null
-		
-#	for item in _get_selected_items_as_array():
-#		print("selected item : ", item.get_path())
 		
 func _on_reload_btn_pressed():
 	_fs_manager.attempt_reload()
@@ -382,7 +377,6 @@ func _on_sel_item_uid_edit(p_text:String):
 	if found_item != null:
 		_select_item_wrapper(found_item, true, false, true)
 	else:
-		print("null!")
 		refresh_selected_path()
 
 func post_init(p_value:SubFSShare, p_global_pref:SubFSPref, p_main_pref:SubFSMainPref, p_tab_pref:SubFSTabContentPref, p_fs_manager:SubFSManagerNode):
@@ -413,31 +407,27 @@ func _clear_list():
 		_root_wrapper = null
 
 func _on_item_invalid(p_item:SubFSTreeItemWrapper):
-#	print("_on_item_invalid : ", p_item.get_id())
 	_clear_list()
 
 func has_list()->bool:
 	return _root_wrapper != null
 
 func reset_list(p_tag:String):
-	print(get_instance_id(), ", reset_list_attemptd : ", p_tag)
+#	print(get_instance_id(), ", reset_list_attemptd : ", p_tag)
 	_clear_list()
 	refresh_selected_path()
 	refresh_pin_btn()
 	refresh_post_btn()
 	_refresh_sel_info_expand()
 
-#	print(get_instance_id(), "reset_list")
-
 	if _fs_manager == null:
 		return
 
 	var root_fs_item := _fs_manager.get_root_item()
 	if root_fs_item == null:
-#		print("no root fs")
 		return
 		
-	print(get_instance_id(), ", start reset_list : ", p_tag)
+#	print(get_instance_id(), ", start reset_list : ", p_tag)
 
 	_root_wrapper = null
 	var tab_root_item:SubFSItem = null
@@ -453,12 +443,10 @@ func reset_list(p_tag:String):
 		tab_root_item = root_fs_item
 		
 	if !tab_root_item.is_valid():
-#		print("tab_root_item is invalid!")
 		return
 
 	var context:SubFSContext = SubFSContext.new()
 	context.set_filter_text(_get_filter_text())
-#	print("tab_root_item : ", tab_root_item.get_path(), ", selected_path : ", _selected_path)
 	var tab_root_tree_item:TreeItem = _tree.create_item()
 	_root_wrapper = SubFSTreeItemWrapper.new()
 	_root_wrapper.post_init(context, _fs_share, tab_root_item, tab_root_tree_item, self)
@@ -486,21 +474,18 @@ func _notify_pref_updated():
 
 func find_and_select_item(p_target_path:String, p_find_alt_dir:bool, p_expand:bool, p_reset:bool, p_notify:bool):
 	if !has_list():
-#		print("error: no root wrapper")
 		return
 
 	if p_target_path.is_empty():
 		p_target_path = _root_wrapper.get_path()
 		
-	print("find_and_select_item : ", p_target_path, ", expand : ", p_expand, ", reset : ", p_reset)
+#	print("find_and_select_item : ", p_target_path, ", expand : ", p_expand, ", reset : ", p_reset)
 		
 	var found_item:SubFSTreeItemWrapper = _root_wrapper.find_item(p_target_path, p_find_alt_dir, 0)
 	if found_item == null and p_find_alt_dir:
 		found_item = _root_wrapper
-		print("not found! replace to root wrapper")
 
 	if found_item != null:
-		print("found_item : ", found_item.get_path())
 		_select_item_wrapper(found_item, p_expand, p_reset, p_notify)
 
 func _select_item_wrapper(p_item:SubFSTreeItemWrapper, p_expand:bool, p_reset:bool, p_notify:bool):
@@ -807,6 +792,7 @@ func _drop_data(at_position:Vector2, drag_data:Variant):
 			for i in range(fnames.size()):
 				if fnames[i].trim_suffix("/").get_base_dir() != target_dir:
 					to_move.push_back({"path":fnames[i], "is_file":!fnames[i].ends_with("/")})
+
 			if !to_move.is_empty():
 				for item in to_move:
 					print("item to move : ", item)

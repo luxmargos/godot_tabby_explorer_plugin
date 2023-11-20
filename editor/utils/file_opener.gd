@@ -8,8 +8,6 @@ static func open_file_item(p_file_item:SubFSTreeItemWrapper, p_share:SubFSShare)
 	var file_type:StringName = fs_item.get_file_type()
 	var file_ext:String = fs_item.get_file_ext().to_lower()
 	
-#	print("_open_file : ", item_path, ", ", file_type, ", ", file_ext)
-	
 	var ei:EditorInterface = p_share.get_editor_interface()
 	
 	# see how godot open the file
@@ -36,7 +34,6 @@ static func open_file_item(p_file_item:SubFSTreeItemWrapper, p_share:SubFSShare)
 		if file_type == "TextFile":
 			pass
 		pass
-#		print("try forced load : ", item_path)
 #		var res = ResourceLoader.load(item_path)
 #		if res != null:
 #			ei.edit_resource(res)
