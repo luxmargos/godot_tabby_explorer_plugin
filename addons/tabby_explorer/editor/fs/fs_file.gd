@@ -1,4 +1,8 @@
-class_name SubFSItemFile extends SubFSItem
+@tool
+
+class_name SubFSItemFile extends "fs_item.gd"
+
+const SubFSItemDir := preload("./fs_dir.gd")
 
 var _file_index:int
 

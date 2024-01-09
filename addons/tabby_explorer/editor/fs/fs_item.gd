@@ -1,3 +1,5 @@
+@tool
+
 class_name SubFSItem extends RefCounted
 
 class SearchResult:

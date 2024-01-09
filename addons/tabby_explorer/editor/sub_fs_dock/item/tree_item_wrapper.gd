@@ -1,27 +1,14 @@
+@tool
+
 class_name SubFSTreeItemWrapper extends RefCounted
 
 const SubFSShare := preload("../../share.gd")
 const SubFSThemeHelper := preload("../../utils/theme_helper.gd")
 const SubFSContext := preload("./context.gd")
-
-class SearchResult:
-	var _depth:int = 0
-	var _item:SubFSTreeItemWrapper
-	
-	func _init(p_depth:int, p_item:SubFSTreeItemWrapper):
-		_depth = p_depth
-		_item = p_item
-	
-	func get_depth()->int:
-		return _depth
-		
-	func get_item()->SubFSTreeItemWrapper:
-		return _item
-	
-	func has_item()->bool:
-		return _item != null
-
-signal invalid(p_item:SubFSTreeItemWrapper)
+const Utils := preload("./utils.gd")
+const SubFSSearchResult := preload("./search_result.gd")
+const SubFSItem := preload("../../fs/fs_item.gd")
+const SubFSItemDir := preload("../../fs/fs_dir.gd")
 
 static func as_paths(p_items:Array[SubFSTreeItemWrapper])->PackedStringArray:
 	var paths:PackedStringArray
@@ -37,6 +24,7 @@ var _saved_path:String
 var _fs_share:SubFSShare
 var _context:SubFSContext
 var _is_filter_match:bool = false
+signal invalid(p_item:SubFSTreeItemWrapper)
 
 func post_init(p_context:SubFSContext, p_fs_share:SubFSShare, p_fs_item:SubFSItem, p_tree_item:TreeItem, p_ref_control:Control):
 	_context = p_context
@@ -199,7 +187,7 @@ func _reset_sub_tree_items():
 	if _fs_item.is_dir():
 		var dir_item:SubFSItemDir = _fs_item as SubFSItemDir
 		for sub_item in dir_item.get_sub_items():
-			var child_wrapper := SubFSTreeItemWrapper.new()
+			var child_wrapper := Utils.new_wrapper()
 			var child_tree_item := ti.create_child()
 			child_wrapper.post_init(_context, _fs_share, sub_item, child_tree_item, _ref_control)
 
@@ -229,21 +217,21 @@ func get_os_path()->String:
 func get_name()->String:
 	return _fs_item.get_name()
 	
-func _inter_find_item(p_target_path:String, p_find_alt_dir:bool, p_search_depth:int)->SearchResult:
+func _inter_find_item(p_target_path:String, p_find_alt_dir:bool, p_search_depth:int)->SubFSSearchResult:
 	if !_fs_item.is_starts_with(p_target_path):
-		return SearchResult.new(p_search_depth, null)
+		return SubFSSearchResult.new(p_search_depth, null)
 
 	if _fs_item.is_match(p_target_path):
-		return SearchResult.new(p_search_depth, self)
+		return SubFSSearchResult.new(p_search_depth, self)
 
 	if !_fs_item.is_dir():
-		return SearchResult.new(p_search_depth, null)
+		return SubFSSearchResult.new(p_search_depth, null)
 	
 	if _fs_item.is_expandable():
 		var next_depth:int = p_search_depth + 1
 		var deepest_depth:int = next_depth
 		
-		var sub_item_result:SearchResult = null
+		var sub_item_result:SubFSSearchResult = null
 		for sub_item in get_tree_item_children():
 			var sub_item_wrapper:SubFSTreeItemWrapper = sub_item.get_metadata(0)
 			var result := sub_item_wrapper._inter_find_item(p_target_path, p_find_alt_dir, next_depth)
@@ -256,12 +244,12 @@ func _inter_find_item(p_target_path:String, p_find_alt_dir:bool, p_search_depth:
 			return sub_item_result
 		
 		if p_find_alt_dir and deepest_depth == next_depth:
-			return SearchResult.new(p_search_depth, self)
+			return SubFSSearchResult.new(p_search_depth, self)
 
 	if p_find_alt_dir:
-		return SearchResult.new(p_search_depth, self)
+		return SubFSSearchResult.new(p_search_depth, self)
 
-	return SearchResult.new(p_search_depth, null)
+	return SubFSSearchResult.new(p_search_depth, null)
 
 func find_item(p_target_path:String, p_find_alt_dir:bool, p_search_depth:int)->SubFSTreeItemWrapper:
 	return _inter_find_item(p_target_path, p_find_alt_dir, p_search_depth).get_item()

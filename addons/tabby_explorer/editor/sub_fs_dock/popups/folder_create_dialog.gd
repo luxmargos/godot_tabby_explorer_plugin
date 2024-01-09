@@ -1,3 +1,5 @@
+@tool
+
 extends ConfirmationDialog
 
 const SubFSTextHelper := preload("../../utils/text_helper.gd")

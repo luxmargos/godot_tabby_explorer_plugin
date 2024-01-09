@@ -1,6 +1,10 @@
+@tool
+
 extends Node
 
 const SubFSShare := preload("../share.gd")
+const SubFSItemRootDir := preload("./fs_root_dir.gd")
+const SubFSItem := preload("./fs_item.gd")
 
 var _recreation_trigger:float = 0.0
 var _fs_share:SubFSShare

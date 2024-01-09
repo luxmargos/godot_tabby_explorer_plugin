@@ -1,1 +1,3 @@
+@tool
+
 extends RefCounted

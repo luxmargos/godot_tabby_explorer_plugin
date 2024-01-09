@@ -1,3 +1,5 @@
+@tool
+
 extends ConfirmationDialog
 
 const SubFSShare := preload("../../share.gd")

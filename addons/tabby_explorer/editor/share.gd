@@ -1,3 +1,5 @@
+@tool
+
 extends RefCounted
 
 var _ei:EditorInterface

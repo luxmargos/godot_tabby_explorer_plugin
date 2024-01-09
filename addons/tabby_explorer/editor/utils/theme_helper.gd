@@ -1,4 +1,9 @@
+@tool
+
 extends RefCounted
+
+const SubFSTreeItemWrapper := preload("../sub_fs_dock/item/tree_item_wrapper.gd")
+const SubFSItemFile := preload("../fs/fs_file.gd")
 
 static func setup_tree_item_icon(p_ref_control:Control, p_icon:TextureRect, p_item:SubFSTreeItemWrapper):
 	p_icon.texture = find_tree_item_icon(p_ref_control, p_item)

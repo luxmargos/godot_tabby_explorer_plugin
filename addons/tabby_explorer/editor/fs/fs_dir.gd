@@ -1,4 +1,11 @@
-class_name SubFSItemDir extends SubFSItem
+@tool
+
+class_name SubFSItemDir extends "fs_item.gd"
+
+const SubFSItem := preload("./fs_item.gd")
+const SubFSItemDir := preload("./fs_dir.gd")
+const SubFSItemFile := preload("./fs_file.gd")
+const Utils := preload("./utils.gd")
 
 var _efsd:WeakRef
 var _dir_index:int
@@ -79,7 +86,7 @@ func reset_sub_items():
 	for i in range(efsd.get_subdir_count()):
 		var sub_efsd:EditorFileSystemDirectory = efsd.get_subdir(i)
 		
-		var sub_item:SubFSItemDir = SubFSItemDir.new()
+		var sub_item:SubFSItemDir = Utils.new_dir()
 		sub_item.set_parent(self)
 		sub_item._inter_invalid.connect(_on_sub_item_invalid)
 		sub_item.set_efsd(sub_efsd)

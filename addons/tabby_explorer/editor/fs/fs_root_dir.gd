@@ -1,4 +1,6 @@
-class_name SubFSItemRootDir extends SubFSItemDir
+@tool
+
+class_name SubFSItemRootDir extends "fs_dir.gd"
 
 func get_name()->String:
 	if !is_valid():

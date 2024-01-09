@@ -2,8 +2,8 @@
 
 extends VBoxContainer
 
-## TODO: Performance enhancement
-## TODO: Search by UID
+const SubFSTreeItemWrapper := preload("./item/tree_item_wrapper.gd")
+const SubFSItem := preload("../fs/fs_item.gd")
 
 const SubFSShare := preload("../share.gd")
 const SubFSManagerNode := preload("../fs/fs_manager_node.gd")
@@ -21,7 +21,6 @@ const SubFSPref := preload("../pref.gd")
 
 const SubFSFolderCreateDialog := preload("./popups/folder_create_dialog.gd")
 const SubFSRemoveDialog := preload("./popups/remove_dialog.gd")
-
 const SubFSContext := preload("./item/context.gd")
 
 enum PopupActions {
@@ -526,7 +525,7 @@ func _select_item_wrapper(p_item:SubFSTreeItemWrapper, p_expand:bool, p_reset:bo
 		_tree.set_selected(p_item.get_tree_item(), 0)
 	else:
 		# without emit tree.multi_selected siangl
-		var ti := p_item.get_tree_item()
+		var ti = p_item.get_tree_item()
 		ti.select(0)
 		_update_selection(ti, 0, true, false)
 		

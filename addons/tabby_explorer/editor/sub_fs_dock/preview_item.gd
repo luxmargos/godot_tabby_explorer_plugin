@@ -3,6 +3,7 @@
 extends HBoxContainer
 
 const SubFSThemeHelper := preload("../utils/theme_helper.gd")
+const SubFSTreeItemWrapper := preload("../sub_fs_dock/item/tree_item_wrapper.gd")
 
 var _icon:TextureRect
 var _label:Label

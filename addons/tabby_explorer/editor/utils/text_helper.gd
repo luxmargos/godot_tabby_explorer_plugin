@@ -1,3 +1,5 @@
+@tool
+
 extends RefCounted
 
 static func as_unique_name(p_name:String, p_other_refs:Array, p_skip_index:int):

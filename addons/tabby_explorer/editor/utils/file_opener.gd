@@ -1,6 +1,10 @@
+@tool
+
 extends RefCounted
 
 const SubFSShare := preload("../share.gd")
+const SubFSTreeItemWrapper := preload("../sub_fs_dock/item/tree_item_wrapper.gd")
+const SubFSItemFile := preload("../fs/fs_file.gd")
 
 static func open_file_item(p_file_item:SubFSTreeItemWrapper, p_share:SubFSShare):
 	var fs_item:SubFSItemFile = p_file_item.get_fs_item() as SubFSItemFile
