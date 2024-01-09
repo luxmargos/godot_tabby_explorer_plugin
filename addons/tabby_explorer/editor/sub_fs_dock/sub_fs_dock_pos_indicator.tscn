@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bfwtfljmtf72"]
 
-[ext_resource type="Script" path="res://addons/sub_fs/editor/sub_fs_dock/sub_fs_dock_pos_indicator.gd" id="1_umvde"]
+[ext_resource type="Script" path="res://addons/tabby_explorer/editor/sub_fs_dock/sub_fs_dock_pos_indicator.gd" id="1_umvde"]
 
 [node name="sub_fs_dock_pos_indicator" type="MarginContainer"]
 anchors_preset = 15

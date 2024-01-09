@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://vpt16j3wambx"]
+[gd_scene load_steps=5 format=3 uid="uid://csfgxmw4ihidd"]
 
-[ext_resource type="Script" path="res://addons/sub_fs/editor/sub_fs_dock/sub_fs_dock.gd" id="1_nl6xu"]
+[ext_resource type="Script" path="res://addons/tabby_explorer/editor/sub_fs_dock/sub_fs_config_dock_item.gd" id="1_kfdmx"]
+[ext_resource type="PackedScene" uid="uid://bfwtfljmtf72" path="res://addons/tabby_explorer/editor/sub_fs_dock/sub_fs_dock_pos_indicator.tscn" id="2_jd6ky"]
 
-[sub_resource type="Image" id="Image_rqwmv"]
+[sub_resource type="Image" id="Image_psdvm"]
 data = {
 "data": PackedByteArray(255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 93, 93, 41, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0),
 "format": "RGBA8",
@@ -11,63 +12,87 @@ data = {
 "width": 16
 }
 
-[sub_resource type="ImageTexture" id="ImageTexture_40qj8"]
-image = SubResource("Image_rqwmv")
+[sub_resource type="ImageTexture" id="ImageTexture_5nu0a"]
+image = SubResource("Image_psdvm")
 
-[node name="Sub FileSystem" type="MarginContainer"]
-anchors_preset = 15
+[node name="sub_fs_config_dock_item" type="HBoxContainer"]
+anchors_preset = 10
 anchor_right = 1.0
-anchor_bottom = 1.0
 grow_horizontal = 2
-grow_vertical = 2
-script = ExtResource("1_nl6xu")
-
-[node name="main" type="VBoxContainer" parent="."]
-layout_mode = 2
-
-[node name="inner" type="VBoxContainer" parent="main"]
-layout_mode = 2
-size_flags_vertical = 3
-
-[node name="tabbar_container" type="HBoxContainer" parent="main/inner"]
-layout_mode = 2
-
-[node name="tab_bar" type="TabBar" parent="main/inner/tabbar_container"]
-layout_mode = 2
 size_flags_horizontal = 3
-tab_close_display_policy = 1
-drag_to_rearrange_enabled = true
+size_flags_vertical = 0
+script = ExtResource("1_kfdmx")
 
-[node name="new_tab_btn" type="Button" parent="main/inner/tabbar_container"]
+[node name="index_label" type="Label" parent="."]
+visible = false
 layout_mode = 2
-tooltip_text = "Add new tab"
-icon = SubResource("ImageTexture_40qj8")
+size_flags_vertical = 1
+text = "[0]"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="toggle_remove_tab_btn" type="Button" parent="main/inner/tabbar_container"]
+[node name="remove_btn" type="Button" parent="."]
 layout_mode = 2
-tooltip_text = "Toggle visibility of remove button"
+size_flags_vertical = 4
 toggle_mode = true
-icon = SubResource("ImageTexture_40qj8")
+icon = SubResource("ImageTexture_5nu0a")
 
-[node name="config_btn" type="Button" parent="main/inner/tabbar_container"]
-layout_mode = 2
-tooltip_text = "Open configuration panel"
-icon = SubResource("ImageTexture_40qj8")
-
-[node name="Control" type="Control" parent="main/inner/tabbar_container"]
+[node name="Control" type="Control" parent="."]
+custom_minimum_size = Vector2(10, 0)
 layout_mode = 2
 
-[node name="tab_rename_cont" type="HBoxContainer" parent="main/inner"]
-layout_mode = 2
-
-[node name="tab_rename_edit" type="LineEdit" parent="main/inner/tab_rename_cont"]
+[node name="body" type="VBoxContainer" parent="."]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="tab_container" type="TabContainer" parent="main/inner"]
+[node name="name_cont" type="HBoxContainer" parent="body"]
 layout_mode = 2
-size_flags_vertical = 3
-tabs_visible = false
 
-[node name="config_cont" type="MarginContainer" parent="."]
+[node name="title_label" type="Label" parent="body/name_cont"]
 layout_mode = 2
+text = "Title : "
+vertical_alignment = 1
+
+[node name="name_edit" type="LineEdit" parent="body/name_cont"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+
+[node name="dock_pos_cont" type="HBoxContainer" parent="body"]
+layout_mode = 2
+
+[node name="dock_pos_label" type="Label" parent="body/dock_pos_cont"]
+layout_mode = 2
+text = "Position : "
+vertical_alignment = 1
+
+[node name="dock_pos_opts" type="OptionButton" parent="body/dock_pos_cont"]
+layout_mode = 2
+size_flags_horizontal = 3
+item_count = 8
+selected = 0
+popup/item_0/text = "Left side, Upper-Left"
+popup/item_0/id = 0
+popup/item_1/text = "Left side, Bottom-Left"
+popup/item_1/id = 1
+popup/item_2/text = "Left side, Upper-Right"
+popup/item_2/id = 2
+popup/item_3/text = "Left side, Bottom-Right"
+popup/item_3/id = 3
+popup/item_4/text = "Right side, Upper-Left"
+popup/item_4/id = 4
+popup/item_5/text = "Right side, Bottom-Left"
+popup/item_5/id = 5
+popup/item_6/text = "Right side, Upper-Right"
+popup/item_6/id = 6
+popup/item_7/text = "Right side, Bottom-Right"
+popup/item_7/id = 7
+
+[node name="dock_pos_indicator" parent="body/dock_pos_cont" instance=ExtResource("2_jd6ky")]
+layout_mode = 2
+size_flags_horizontal = 4
+
+[node name="ColorRect" type="ColorRect" parent="body"]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+color = Color(0.741176, 0.741176, 0.741176, 1)

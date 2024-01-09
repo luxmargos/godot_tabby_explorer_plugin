@@ -15,13 +15,13 @@ var _pref:SubFSPref
 var _user_docks_pref:SubFSMainPref
 var _project_shared_docks_pref:SubFSMainPref 
 
-const PREF_DIR_NAME:String = ".sub_fs_pref"
+const PREF_DIR_NAME:String = ".tabby_explorer_pref"
 const PREF_DIR:String = "res://" + PREF_DIR_NAME
-const PREF_FILE_NAME:String ="sub_fs_pref.tres"
+const PREF_FILE_NAME:String ="tabby_explorer_pref.tres"
 const PREF_FILE:String = PREF_DIR + "/" + PREF_FILE_NAME
 const PREF_FILE_IGNORE:String = PREF_DIR + "/" + ".gitignore" 
 
-const MAIN_PREF_FILE_NAME:String = "sub_fs_main_pref.tres"
+const MAIN_PREF_FILE_NAME:String = "tabby_explorer_main_pref.tres"
 
 var _all_docks:Array[SubFSDock]
 var _fs_manager_node:SubFSManagerNode

@@ -78,11 +78,13 @@ var _tree:Tree
 var _selected_item:SubFSTreeItemWrapper
 var _selected_items:Dictionary
 
-# TODO
+# POPUPS
+# DEPRECATED
 var _tree_popup:PopupMenu
 var _make_dir_dialog:SubFSFolderCreateDialog
 var _script_create_dialog:ScriptCreateDialog
 var _remove_dialog:SubFSRemoveDialog
+
 var _recreation_trigger:float = 0.0
 
 var _saved_uncollapsed_paths:PackedStringArray
@@ -147,6 +149,7 @@ func _ready():
 	_filter_edit.text_changed.connect(_on_filter_edit_text_changed)
 	
 	_tree = get_node("tree")
+	#_tree.select_mode = Tree.SELECT_SINGLE
 	_tree.gui_input.connect(_on_tree_gui_input)
 	_tree.multi_selected.connect(_on_tree_item_multi_selected)
 	_tree.button_clicked.connect(_on_tree_button_clicked)
@@ -175,6 +178,8 @@ func _ready():
 	_tree_popup.id_pressed.connect(_tree_popup_rmb_option)
 	
 	visibility_changed.connect(_on_visibility_changed)
+	
+	
 
 func _on_visibility_changed():
 	set_process(is_visible_in_tree())
@@ -277,12 +282,17 @@ func _on_tree_item_activated():
 func _on_item_mouse_selected(position: Vector2, mouse_button_index: int):
 	if !has_selected_item():
 		return
-		
+	
 	if _tab_pref.always_post_selection_to_fs_dock:
 		_default_fs_navigate(get_selected_item().get_path())
 	
 	if mouse_button_index != MOUSE_BUTTON_RIGHT:
 		return
+		
+	# TODO: tweak to default fs-tree
+	#if target_tree:
+		#target_tree.item_mouse_selected.emit(position, mouse_button_index)
+		#return
 
 	if !has_selected_item():
 		return
@@ -293,7 +303,7 @@ func _on_item_mouse_selected(position: Vector2, mouse_button_index: int):
 	_tree_popup.position = _tree.get_screen_position() + position
 	_tree_popup.reset_size()
 	_tree_popup.popup()
-	
+
 func _on_tree_button_clicked(p_item:TreeItem, column: int, id: int, mouse_button_index: int):
 	pass
 
@@ -380,6 +390,10 @@ func _on_sel_item_uid_edit(p_text:String):
 	else:
 		refresh_selected_path()
 
+
+#TODO: tweak to default fs-tree
+#var target_tree:Tree
+
 func post_init(p_value:SubFSShare, p_global_pref:SubFSPref, p_main_pref:SubFSMainPref, p_tab_pref:SubFSTabContentPref, p_fs_manager:SubFSManagerNode):
 	_fs_share = p_value
 	_global_pref = p_global_pref
@@ -389,6 +403,19 @@ func post_init(p_value:SubFSShare, p_global_pref:SubFSPref, p_main_pref:SubFSMai
 	_fs_manager = p_fs_manager
 	_fs_manager.fs_generated.connect(_on_fs_gen)
 	reset_list("post_init")
+	
+	#TODO: tweak to default fs-tree
+	#for child in _fs_share.get_file_system_dock().get_children(true):
+		#print("FS CHILD : ",child)
+		#if child is Tree:
+			#print("CHILD CHILD TREE : ", child)
+#
+		#if child is SplitContainer:
+			#for s_child in child.get_children(true):
+				#if s_child is Tree:
+					#print("CHild CHild Tree : ", s_child)
+					#target_tree = s_child
+					#break
 
 func _on_fs_gen():
 	if !is_visible_in_tree():

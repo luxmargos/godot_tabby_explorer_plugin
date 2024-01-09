@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://cyyewgpylcclw"]
 
-[ext_resource type="Script" path="res://addons/sub_fs/editor/sub_fs_dock/preview_item.gd" id="1_750d7"]
+[ext_resource type="Script" path="res://addons/tabby_explorer/editor/sub_fs_dock/preview_item.gd" id="1_750d7"]
 
 [node name="preview_item" type="HBoxContainer"]
 anchors_preset = 15

@@ -1,7 +1,7 @@
 [gd_scene load_steps=7 format=3 uid="uid://ml08ihwpuksa"]
 
-[ext_resource type="Script" path="res://addons/sub_fs/editor/sub_fs_dock/sub_fs_config.gd" id="1_87stq"]
-[ext_resource type="PackedScene" uid="uid://c81nrsifb1lwy" path="res://addons/sub_fs/editor/sub_fs_dock/sub_fs_config_docks.tscn" id="2_nlk06"]
+[ext_resource type="Script" path="res://addons/tabby_explorer/editor/sub_fs_dock/sub_fs_config.gd" id="1_87stq"]
+[ext_resource type="PackedScene" uid="uid://c81nrsifb1lwy" path="res://addons/tabby_explorer/editor/sub_fs_dock/sub_fs_config_docks.tscn" id="2_nlk06"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wai55"]
 content_margin_left = 4.0

@@ -1,14 +1,19 @@
+# project ignores
+.sub_fs_pref
+.tabby_explorer_pref
+
+#vscode
+.vscode
+
 # Created by https://www.toptal.com/developers/gitignore/api/godot,macos,windows,linux
 # Edit at https://www.toptal.com/developers/gitignore?templates=godot,macos,windows,linux
 
 ### Godot ###
 # Godot 4+ specific ignores
-.godot/
-
-# Godot-specific ignores
 .import/
 export.cfg
 export_presets.cfg
+.godot/
 
 # Imported translations (automatically generated from CSV files)
 *.translation
@@ -40,7 +45,8 @@ mono_crash.*.json
 .LSOverride
 
 # Icon must end with two \r
-Icon
+Icon
+
 
 # Thumbnails
 ._*
