@@ -1,20 +1,18 @@
 # Tabby Explorer plugin for Godot
 
-Tabby Explorer is a plugin for the Godot Editor designed to integrate
-with the default FileSystem dock of Godot Editor.
+Tabby Explorer is a plugin for the Godot Editor.
+
+With this plugin, you can use your own multiple FileSystem docks and nested tabs
+to organize complex folder structures according to your preferences.
 
 While Godot Editor is excellent, it offers only a single FileSystem dock. 
 
 I felt what I'm so exhauted and spending lot of time with scrolling up and down 
-through the entire of my huge resources.
-The favorite system was not enough to me.
-
-With this plugin, you can use your own multiple FileSystem docks and tabs
-to organize complex folder structures according to your preferences.
+through the entire of my huge resources. The favorite system was not enough to me.
+That was a reason why I built this plugin.
 
 <img src="./doc/screenshot.png" width="800"/>
 <img src="./doc/screenshot2.png" width="400"/>
-
 
 ## Supported Version (Currently tested)
 

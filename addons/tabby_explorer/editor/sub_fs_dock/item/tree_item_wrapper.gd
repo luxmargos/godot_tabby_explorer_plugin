@@ -1,6 +1,8 @@
 @tool
 
-class_name SubFSTreeItemWrapper extends RefCounted
+extends RefCounted
+
+const SubFSTreeItemWrapper = preload("./tree_item_wrapper.gd")
 
 const SubFSShare := preload("../../share.gd")
 const SubFSThemeHelper := preload("../../utils/theme_helper.gd")

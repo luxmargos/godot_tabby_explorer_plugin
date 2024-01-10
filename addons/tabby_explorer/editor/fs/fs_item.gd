@@ -1,6 +1,8 @@
 @tool
 
-class_name SubFSItem extends RefCounted
+extends RefCounted
+
+const SubFSItem = preload("./fs_item.gd")
 
 class SearchResult:
 	var _depth:int = 0

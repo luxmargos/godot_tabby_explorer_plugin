@@ -1,8 +1,7 @@
 @tool
 
-class_name SubFSItemDir extends "fs_item.gd"
+extends "fs_item.gd"
 
-const SubFSItem := preload("./fs_item.gd")
 const SubFSItemDir := preload("./fs_dir.gd")
 const SubFSItemFile := preload("./fs_file.gd")
 const Utils := preload("./utils.gd")
