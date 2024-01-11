@@ -34,22 +34,29 @@ var _config:SubFSConfig
 var _main:Control
 var _tabbar_container:Control
 var _tab_bar:TabBar
+var _tab_rename_btn:Button
 var _new_tab_btn:Button
-var _toggle_remove_tab_btn:Button
 var _config_btn:Button
 
 var _tab_rename_cont:Control
 var _tab_rename_edit:LineEdit
+var _tab_rename_done_btn:Button
+var _edit_tabs_btn:Button
 
 var _tab_container:TabContainer
 
 var _last_clicked_idx:int = -1
 var _last_clicked_time:float = 0
 
-signal global_pref_updated
+
 signal saved_tab_selections_updated
-signal user_docks_updated
-signal project_shared_docks_updated
+
+#signal global_pref_updated
+#signal user_docks_updated
+#signal project_shared_docks_updated
+
+signal settings_updated
+
 signal pref_updated
 
 # Called when the node enters the scene tree for the first time.
@@ -60,15 +67,19 @@ func _ready():
 	var main_inner = _main.get_node("inner")
 	_tabbar_container = main_inner.get_node("tabbar_container")
 	_tab_bar = _tabbar_container.get_node("tab_bar")
+	
+	_tab_rename_btn = _tabbar_container.get_node("rename_btn")
+	_tab_rename_btn.icon = get_theme_icon("Rename", "EditorIcons")
+	_tab_rename_btn.text = ""
+	
 	_new_tab_btn = _tabbar_container.get_node("new_tab_btn")
 	_new_tab_btn.icon = get_theme_icon("Add", "EditorIcons")
 	_new_tab_btn.text = ""
-	
-	_toggle_remove_tab_btn = _tabbar_container.get_node("toggle_remove_tab_btn")
-#	_toggle_remove_tab_btn.icon = get_theme_icon("Remove", "EditorIcons")
-	_toggle_remove_tab_btn.icon = get_theme_icon("Close", "EditorIcons")
-	_toggle_remove_tab_btn.text = ""
 
+	_edit_tabs_btn = _tabbar_container.get_node("edit_tabs_btn")
+	_edit_tabs_btn.icon = get_theme_icon("Edit","EditorIcons")
+	_edit_tabs_btn.text = ""
+	
 	_config_btn = _tabbar_container.get_node("config_btn")
 	_config_btn.icon = get_theme_icon("Tools", "EditorIcons")
 	_config_btn.text = ""
@@ -76,6 +87,9 @@ func _ready():
 	
 	_tab_rename_cont = main_inner.get_node("tab_rename_cont")
 	_tab_rename_edit = _tab_rename_cont.get_node("tab_rename_edit")
+	_tab_rename_done_btn = _tab_rename_cont.get_node("tab_rename_done_btn")
+	#_tab_rename_done_btn.icon = get_theme_icon("Close", "EditorIcons")
+	#_tab_rename_done_btn.icon = get_theme_icon("dismiss", "AssetLib")
 	
 	_tab_container = main_inner.get_node("tab_container")
 	
@@ -90,44 +104,52 @@ func _ready():
 	_tab_bar.tab_close_pressed.connect(_on_tab_close_pressed)
 	_tab_bar.active_tab_rearranged.connect(_on_active_tab_rearranged)
 	
+	_tab_rename_btn.pressed.connect(_on_tab_rename_btn_pressed)
 	_new_tab_btn.pressed.connect(_on_new_tab_btn_pressed)
 	_tab_rename_cont.visible = false
 	_tab_rename_edit.text_submitted.connect(_on_tab_rename)
-	
-	_toggle_remove_tab_btn.toggled.connect(_on_toggle_remove_tab_btn)
-	
-	_refresh_tab_close_button()
-	hide_config()
+	_tab_rename_done_btn.pressed.connect(_on_tab_rename_done_btn_pressed)
 
-func _on_toggle_remove_tab_btn(_p_value:bool):
-	_refresh_tab_close_button()
+	_edit_tabs_btn.toggled.connect(_on_toggle_edit_tabs_btn)
 	
-func _refresh_tab_close_button():
-	if _toggle_remove_tab_btn.button_pressed:
+	_refresh_tab_management_tools()
+	hide_config()
+	
+func _on_toggle_edit_tabs_btn(_p_value:bool):
+	_refresh_tab_management_tools()
+	
+func _refresh_tab_management_tools():
+	_tab_rename_btn.visible = _edit_tabs_btn.button_pressed
+	_new_tab_btn.visible = _edit_tabs_btn.button_pressed
+	if _edit_tabs_btn.button_pressed:
 		_tab_bar.tab_close_display_policy = TabBar.CLOSE_BUTTON_SHOW_ALWAYS
 	else:
 		_tab_bar.tab_close_display_policy = TabBar.CLOSE_BUTTON_SHOW_NEVER
 
-func _on_config_global_pref_updated():
-	global_pref_updated.emit()
+#func _on_config_global_pref_updated():
+	#global_pref_updated.emit()
+	#
+#func _on_user_docks_updated():
+	#user_docks_updated.emit()
+#
+#func _on_project_shared_docks_updated():
+	#project_shared_docks_updated.emit()
 	
-func _on_user_docks_updated():
-	user_docks_updated.emit()
-
-func _on_project_shared_docks_updated():
-	project_shared_docks_updated.emit()
+func _on_settings_updated():
+	settings_updated.emit()
 	
 func _on_visibility_changed():
 	if _pref != null:
 		if !visible:
 			hide_config()
-
+	
 func show_config():
 	if _config == null:
 		_config = SubFSConfigPackedScene.instantiate()
-		_config.global_pref_updated.connect(_on_config_global_pref_updated)
-		_config.user_docks_updated.connect(_on_user_docks_updated)
-		_config.project_shared_docks_updated.connect(_on_project_shared_docks_updated)
+		#_config.global_pref_updated.connect(_on_config_global_pref_updated)
+		#_config.user_docks_updated.connect(_on_user_docks_updated)
+		#_config.project_shared_docks_updated.connect(_on_project_shared_docks_updated)
+		_config.settings_updated.connect(_on_settings_updated)
 		_config.cancelled.connect(hide_config)
 		_config.set_initial_items(_fs_share, _global_pref, _main_user_pref, _main_project_shared_pref)
 		_config_cont.add_child(_config)
@@ -141,6 +163,9 @@ func hide_config():
 		_config.hide_config()	
 	_config_cont.visible = false
 	_main.visible = true
+
+func _on_tab_rename_done_btn_pressed():
+	_on_tab_rename(_tab_rename_edit.text)
 
 func _on_tab_rename(p_new_text:String):
 	_tabbar_container.visible = true
@@ -156,6 +181,7 @@ func _on_new_tab_btn_pressed():
 	add_new_tab(true)
 
 func _on_tab_selected(p_idx:int):
+	print("_on_tab_selected : ", p_idx)
 	if _last_clicked_idx != p_idx:
 		_last_clicked_idx = p_idx
 		_last_clicked_time = Time.get_unix_time_from_system()
@@ -168,12 +194,18 @@ func _on_tab_selected(p_idx:int):
 
 	var time_diff:float = cur_time - old_click_time
 	if time_diff < 0.3:
-		_tabbar_container.visible = false
-		_tab_rename_cont.visible = true
-		_tab_rename_edit.text = _pref.tabs[p_idx].name
-		_tab_rename_edit.select_all()
-		_tab_rename_edit.grab_focus()
+		show_tab_rename_tools(p_idx)
 
+func _on_tab_rename_btn_pressed():
+	show_tab_rename_tools(_tab_bar.current_tab)
+
+func show_tab_rename_tools(p_idx):
+	_tabbar_container.visible = false
+	_tab_rename_cont.visible = true
+	_tab_rename_edit.text = _pref.tabs[p_idx].name
+	_tab_rename_edit.select_all()
+	_tab_rename_edit.grab_focus()
+	
 func _on_active_tab_rearranged(p_to_idx:int):
 	if _last_clicked_idx < 0:
 		return
@@ -192,7 +224,9 @@ func _on_tab_close_pressed(p_idx:int):
 	if _tab_bar.tab_count <= 1:
 		return
 
+	print("remove tab : ", p_idx)
 	_remove_tab(p_idx, true)
+	_on_tab_selected(_tab_bar.current_tab)
 
 func post_init(p_share:SubFSShare, 
 	p_global_pref:SubFSPref, p_main_pref:SubFSMainPref, 

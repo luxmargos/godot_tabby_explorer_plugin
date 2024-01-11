@@ -1,9 +1,12 @@
-[gd_scene load_steps=7 format=3 uid="uid://ml08ihwpuksa"]
+[gd_scene load_steps=13 format=3 uid="uid://ml08ihwpuksa"]
 
 [ext_resource type="Script" path="res://addons/tabby_explorer/editor/sub_fs_dock/sub_fs_config.gd" id="1_87stq"]
+[ext_resource type="Texture2D" uid="uid://bywj5piii6cfd" path="res://addons/tabby_explorer/assets/heart.svg" id="2_ebyxx"]
 [ext_resource type="PackedScene" uid="uid://c81nrsifb1lwy" path="res://addons/tabby_explorer/editor/sub_fs_dock/sub_fs_config_docks.tscn" id="2_nlk06"]
+[ext_resource type="Texture2D" uid="uid://csm3pci0kgkc6" path="res://addons/tabby_explorer/assets/link.svg" id="2_sq5tu"]
+[ext_resource type="Texture2D" uid="uid://clobh344t1pa5" path="res://addons/tabby_explorer/assets/github.svg" id="3_v6kk7"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wai55"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i0hgb"]
 content_margin_left = 4.0
 content_margin_top = 4.0
 content_margin_right = 4.0
@@ -15,7 +18,27 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 corner_detail = 5
 
-[sub_resource type="Image" id="Image_rqwmv"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xpk20"]
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.345098, 0.345098, 0.345098, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 4
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_srb6a"]
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+bg_color = Color(0.345098, 0.345098, 0.345098, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
+corner_detail = 4
+
+[sub_resource type="Image" id="Image_0qofg"]
 data = {
 "data": PackedByteArray(255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 93, 93, 41, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0),
 "format": "RGBA8",
@@ -24,18 +47,32 @@ data = {
 "width": 16
 }
 
-[sub_resource type="ImageTexture" id="ImageTexture_40qj8"]
-image = SubResource("Image_rqwmv")
+[sub_resource type="ImageTexture" id="ImageTexture_dwurf"]
+image = SubResource("Image_0qofg")
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_xpk20"]
-content_margin_top = 5.0
-content_margin_bottom = 5.0
-bg_color = Color(0.345098, 0.345098, 0.345098, 1)
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-corner_detail = 4
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cqeq2"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0, 0.38, 0.88, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2754o"]
+content_margin_left = 4.0
+content_margin_top = 4.0
+content_margin_right = 4.0
+content_margin_bottom = 4.0
+bg_color = Color(0.47, 0.6, 1, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_right = 3
+corner_radius_bottom_left = 3
+corner_detail = 5
 
 [node name="config" type="MarginContainer"]
 anchors_preset = 15
@@ -48,113 +85,191 @@ size_flags_vertical = 3
 script = ExtResource("1_87stq")
 
 [node name="Panel" type="Panel" parent="."]
+visible = false
 layout_mode = 2
 
 [node name="config_inner" type="MarginContainer" parent="."]
 layout_mode = 2
-theme_override_constants/margin_left = 15
-theme_override_constants/margin_top = 15
-theme_override_constants/margin_right = 15
-theme_override_constants/margin_bottom = 15
 
-[node name="config_scroll_container" type="ScrollContainer" parent="config_inner"]
-layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_wai55")
-
-[node name="VBoxContainer" type="VBoxContainer" parent="config_inner/config_scroll_container"]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="HBoxContainer" type="HBoxContainer" parent="config_inner/config_scroll_container/VBoxContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="config_inner"]
 layout_mode = 2
 
-[node name="Control" type="Control" parent="config_inner/config_scroll_container/VBoxContainer/HBoxContainer"]
+[node name="config_scroll_container" type="ScrollContainer" parent="config_inner/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_i0hgb")
+
+[node name="scroll_inner" type="VBoxContainer" parent="config_inner/VBoxContainer/config_scroll_container"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="cancel_btn" type="Button" parent="config_inner/config_scroll_container/VBoxContainer/HBoxContainer"]
+[node name="PluginTitle" type="Label" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner"]
 layout_mode = 2
-text = "  Cancel  "
-icon = SubResource("ImageTexture_40qj8")
+text = "Tabby Explorer Plugin Settings"
+horizontal_alignment = 1
 
-[node name="Control" type="Control" parent="config_inner/config_scroll_container/VBoxContainer"]
+[node name="Control6" type="Control" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner"]
+custom_minimum_size = Vector2(0, 5)
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="heading_controls" type="HBoxContainer" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="author_btn" type="Button" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner/heading_controls"]
+layout_mode = 2
+text = "  Built by Luxmargos  "
+icon = ExtResource("2_sq5tu")
+
+[node name="Control" type="Control" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner/heading_controls"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="repo_btn" type="Button" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner/heading_controls"]
+layout_mode = 2
+icon = ExtResource("3_v6kk7")
+
+[node name="donate_btn" type="Button" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner/heading_controls"]
+layout_mode = 2
+text = "  Support  "
+icon = ExtResource("2_ebyxx")
+
+[node name="Control" type="Control" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner"]
 custom_minimum_size = Vector2(0, 15)
 layout_mode = 2
 
-[node name="options_container" type="VBoxContainer" parent="config_inner/config_scroll_container/VBoxContainer"]
+[node name="options_container" type="VBoxContainer" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner"]
 layout_mode = 2
 
-[node name="option_section" type="Button" parent="config_inner/config_scroll_container/VBoxContainer/options_container"]
+[node name="section" type="HBoxContainer" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner/options_container"]
 layout_mode = 2
+size_flags_vertical = 0
+theme_override_constants/separation = 10
+
+[node name="option_section" type="Button" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner/options_container/section"]
+layout_mode = 2
+size_flags_horizontal = 3
 mouse_filter = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_xpk20")
-text = "Plugin Options"
+text = "General Options"
 
-[node name="fields" type="VBoxContainer" parent="config_inner/config_scroll_container/VBoxContainer/options_container"]
+[node name="fields" type="VBoxContainer" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner/options_container"]
 layout_mode = 2
 
-[node name="use_user_config_checkbox" type="CheckBox" parent="config_inner/config_scroll_container/VBoxContainer/options_container/fields"]
-layout_mode = 2
-tooltip_text = "Use project shared configuration"
-text = " Use user docks"
-
-[node name="HBoxContainer" type="HBoxContainer" parent="config_inner/config_scroll_container/VBoxContainer/options_container/fields"]
+[node name="VBoxContainer" type="VBoxContainer" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner/options_container/fields"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="config_inner/config_scroll_container/VBoxContainer/options_container/fields/HBoxContainer"]
+[node name="dock_for_favorites_checkbox" type="CheckBox" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner/options_container/fields/VBoxContainer"]
 layout_mode = 2
-text = "      Prefix : "
+tooltip_text = "With this option,  plugin will generate a  dock with favorites"
+text = " Dedicated dock for Favorites (folders only)"
 
-[node name="user_docks_prefix" type="LineEdit" parent="config_inner/config_scroll_container/VBoxContainer/options_container/fields/HBoxContainer"]
+[node name="favorite_dock_name" type="LineEdit" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner/options_container/fields/VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 3
-select_all_on_focus = true
+placeholder_text = "Favorites"
 
-[node name="use_project_shared_config_checkbox" type="CheckBox" parent="config_inner/config_scroll_container/VBoxContainer/options_container/fields"]
+[node name="support_context_menu_checkbox" type="CheckBox" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner/options_container/fields/VBoxContainer"]
 layout_mode = 2
-tooltip_text = "Use project shared configuration"
-text = " Use project shared docks"
+tooltip_text = "This option enables the use of a context popup menu with the right mouse button, implemented through some clever tweaks."
+text = " Support context popup menu (Experimental)"
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="config_inner/config_scroll_container/VBoxContainer/options_container/fields"]
-layout_mode = 2
-
-[node name="Label2" type="Label" parent="config_inner/config_scroll_container/VBoxContainer/options_container/fields/HBoxContainer2"]
-layout_mode = 2
-text = "      Prefix : "
-
-[node name="project_shared_docks_prefix" type="LineEdit" parent="config_inner/config_scroll_container/VBoxContainer/options_container/fields/HBoxContainer2"]
-layout_mode = 2
-size_flags_horizontal = 3
-select_all_on_focus = true
-
-[node name="Control" type="Control" parent="config_inner/config_scroll_container/VBoxContainer/options_container"]
-custom_minimum_size = Vector2(0, 50)
-layout_mode = 2
-
-[node name="apply_options_btn" type="Button" parent="config_inner/config_scroll_container/VBoxContainer/options_container"]
-layout_mode = 2
-text = "  Apply  "
-
-[node name="Control2" type="Control" parent="config_inner/config_scroll_container/VBoxContainer/options_container"]
+[node name="Control2" type="Control" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner/options_container"]
 custom_minimum_size = Vector2(0, 30)
 layout_mode = 2
 
-[node name="user_docks_config" parent="config_inner/config_scroll_container/VBoxContainer" instance=ExtResource("2_nlk06")]
+[node name="user_docks_section" type="Button" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_srb6a")
+text = "Docks (User)"
+
+[node name="use_user_config_checkbox" type="CheckBox" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner"]
+layout_mode = 2
+tooltip_text = "Use project shared configuration"
+text = "Enabled"
+
+[node name="user_prefix" type="HBoxContainer" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner/user_prefix"]
+layout_mode = 2
+text = " Prefix : "
+
+[node name="user_docks_prefix" type="LineEdit" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner/user_prefix"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Insert a prefix to avoid dock name conflict"
+select_all_on_focus = true
+
+[node name="Control4" type="Control" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+
+[node name="user_docks_config" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner" instance=ExtResource("2_nlk06")]
 layout_mode = 2
 title = "Docks (User)"
 
-[node name="Control2" type="Control" parent="config_inner/config_scroll_container/VBoxContainer"]
+[node name="Control2" type="Control" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner"]
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 
-[node name="project_docks_config" parent="config_inner/config_scroll_container/VBoxContainer" instance=ExtResource("2_nlk06")]
+[node name="user_docks_section2" type="Button" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_srb6a")
+text = "Docks (Shared in Project)"
+
+[node name="use_project_shared_config_checkbox" type="CheckBox" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner"]
+layout_mode = 2
+tooltip_text = "Use project shared configuration"
+text = "Enabled"
+
+[node name="project_prefix" type="HBoxContainer" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner"]
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner/project_prefix"]
+layout_mode = 2
+text = " Prefix : "
+
+[node name="project_shared_docks_prefix" type="LineEdit" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner/project_prefix"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Insert a prefix to avoid dock name conflict"
+select_all_on_focus = true
+
+[node name="Control5" type="Control" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner"]
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+
+[node name="project_docks_config" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner" instance=ExtResource("2_nlk06")]
 layout_mode = 2
 title = "Docks (Project Shared)"
 
-[node name="Control3" type="Control" parent="config_inner/config_scroll_container/VBoxContainer"]
+[node name="Control3" type="Control" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner"]
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
 
-[node name="HBoxContainer2" type="HBoxContainer" parent="config_inner/config_scroll_container/VBoxContainer"]
+[node name="HBoxContainer2" type="HBoxContainer" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner"]
 layout_mode = 2
 alignment = 1
+
+[node name="bottom_toolbar" type="HBoxContainer" parent="config_inner/VBoxContainer"]
+layout_mode = 2
+
+[node name="cancel_btn" type="Button" parent="config_inner/VBoxContainer/bottom_toolbar"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+text = "  Cancel  "
+icon = SubResource("ImageTexture_dwurf")
+
+[node name="apply_options_btn" type="Button" parent="config_inner/VBoxContainer/bottom_toolbar"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_cqeq2")
+theme_override_styles/hover = SubResource("StyleBoxFlat_2754o")
+text = "  Apply  "
+icon = SubResource("ImageTexture_dwurf")

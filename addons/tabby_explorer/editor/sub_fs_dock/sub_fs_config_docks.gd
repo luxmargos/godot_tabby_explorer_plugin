@@ -25,16 +25,12 @@ func _ready():
 	_docks_list = find_child("docks_list")
 	_add_dock_item_btn = find_child("add_dock_btn")
 	_add_dock_item_btn.icon = get_theme_icon("Add", "EditorIcons")
-	
-	_docks_save_btn = find_child("apply_docks_btn")
 	_add_dock_item_btn.pressed.connect(_on_add_dock_btn_pressed)
-	_docks_save_btn.pressed.connect(_save_docks_config)
-
 
 func _on_add_dock_btn_pressed():
 	add_dock_config_item(null)
 	
-func _save_docks_config():
+func apply_docks_config():
 	var new_docks:Array[SubFSDockPref] = []
 	var new_dock_items:Array[Node] = _docks_list.get_children()
 	var all_names:Array = _get_all_dock_config_item_names()
@@ -51,6 +47,7 @@ func _save_docks_config():
 		
 		new_docks.insert(0, dock_pref)
 	_main_pref.docks = new_docks
+	_main_pref.fix_empty_docks()
 
 	hide_config()
 	pref_updated.emit()

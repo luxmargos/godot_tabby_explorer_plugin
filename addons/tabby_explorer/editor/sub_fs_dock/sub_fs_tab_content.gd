@@ -1,6 +1,6 @@
 @tool
 
-extends VBoxContainer
+extends MarginContainer
 
 const SubFSTreeItemWrapper := preload("./item/tree_item_wrapper.gd")
 const SubFSItem := preload("../fs/fs_item.gd")
@@ -19,20 +19,7 @@ const SubFSTabContentPref := preload("../dock_tab_pref.gd")
 const SubFSMainPref := preload("../main_pref.gd")
 const SubFSPref := preload("../pref.gd")
 
-const SubFSFolderCreateDialog := preload("./popups/folder_create_dialog.gd")
-const SubFSRemoveDialog := preload("./popups/remove_dialog.gd")
 const SubFSContext := preload("./item/context.gd")
-
-enum PopupActions {
-	FILE_NEW,
-	FILE_NEW_FOLDER,
-	FILE_NEW_SCENE,
-	FILE_NEW_SCRIPT,
-	FILE_NEW_RESOURCE,
-	FILE_NEW_TEXTFILE,
-	
-	FILE_DELETE
-}
 
 const SEP = &"/"
 
@@ -44,6 +31,9 @@ var _global_pref:SubFSPref
 var _tab_pref:SubFSTabContentPref
 var _main_pref:SubFSMainPref
 var _selected_path:String
+
+var _main_cont:Control
+var _popup_menu_keeper:Control
 
 var _toolbar:Control
 
@@ -77,18 +67,25 @@ var _tree:Tree
 var _selected_item:SubFSTreeItemWrapper
 var _selected_items:Dictionary
 
-# POPUPS
-# DEPRECATED
-var _tree_popup:PopupMenu
-var _make_dir_dialog:SubFSFolderCreateDialog
-var _script_create_dialog:ScriptCreateDialog
-var _remove_dialog:SubFSRemoveDialog
+# TODO: Support multi selection mode
+var _is_multi_selection_mode:bool = false
+var _ignore_item_selected_signal:bool = false
 
 var _recreation_trigger:float = 0.0
 
 var _saved_uncollapsed_paths:PackedStringArray
 var _is_filter_mode:bool = false
 var _was_filter_mode:bool = false
+
+# Default FileSystem
+var dfs_split_cont:SplitContainer
+var	dfs_tree:Tree
+var dfs_tree_popup:PopupMenu
+var dfs_tree_popup_origin_parent:Node
+var dfs_file_list:ItemList
+var dfs_file_list_popup:PopupMenu
+var dfs_file_list_popup_origin_parent:Node
+var dfs_handle_popup_id_press:bool = false
 
 signal pref_updated
 signal saved_tab_selections_updated
@@ -97,22 +94,30 @@ func _ready():
 	focus_entered.connect(_on_focus_entered)
 	focus_exited.connect(_on_focus_exited)
 
-	_toolbar = get_node("toolbar")
-	_history_cont = get_node("toolbar/history")
-	_history_prev_btn = get_node("toolbar/history/prev_btn")
-	_history_next_btn = get_node("toolbar/history/next_btn")
+	_main_cont = get_node("main")
+	_popup_menu_keeper = get_node("popup_menu_keeper")
 	
-	_sel_item_info = get_node("toolbar/item_info")
+	_toolbar = _main_cont.get_node("toolbar")
+	_history_cont = _main_cont.get_node("toolbar/history")
+	_history_prev_btn = _main_cont.get_node("toolbar/history/prev_btn")
+	_history_next_btn = _main_cont.get_node("toolbar/history/next_btn")
+	
+	_sel_item_info = _main_cont.get_node("toolbar/item_info")
 	
 	var copy_icon := get_theme_icon("ActionCopy","EditorIcons")
-	_sel_item_path_body = get_node("toolbar/item_info/path_body")
-	_sel_item_path_edit = get_node("toolbar/item_info/path_body/res_path_edit")
-	_sel_item_path_copy_btn = get_node("toolbar/item_info/path_body/copy_res_path_btn")
+	_sel_item_path_body = _main_cont.get_node("toolbar/item_info/path_body")
+	_sel_item_path_edit = _main_cont.get_node("toolbar/item_info/path_body/res_path_edit")
+	_sel_item_path_copy_btn = _main_cont.get_node("toolbar/item_info/path_body/copy_res_path_btn")
 #	_sel_item_path_copy_btn.icon = get_theme_icon("Duplicate","EditorIcons")
 	_sel_item_path_copy_btn.icon = copy_icon
 	_sel_item_path_copy_btn.text = ""
 	
-	_more_info_cont = get_node("toolbar/item_info/more_info_cont")
+	_pin_btn = _main_cont.get_node("toolbar/item_info/path_body/pin_btn")
+	_pin_btn.icon = get_theme_icon("Pin", "EditorIcons")
+	_pin_btn.text = ""
+	_pin_btn.custom_minimum_size = Vector2(_pin_btn.custom_minimum_size.x, _sel_item_path_edit.size.y) 
+	
+	_more_info_cont = _main_cont.get_node("toolbar/item_info/more_info_cont")
 	_sel_item_uid_body = _more_info_cont.get_node("uid_body")
 	_sel_item_uid_edit = _sel_item_uid_body.get_node("edit")
 	_sel_item_uid_copy_btn = _sel_item_uid_body.get_node("copy_btn")
@@ -125,35 +130,43 @@ func _ready():
 	_sel_item_name_copy_btn.icon = copy_icon
 	_sel_item_name_copy_btn.text = ""
 	
-	var tools_cont:Control = get_node("toolbar/item_info/path_body/tools")
+	var tools_cont:Control = _main_cont.get_node("toolbar/item_info/path_body/tools")
 	_reload_btn = tools_cont.get_node("reload_btn")
 	_reload_btn.icon = get_theme_icon("Reload", "EditorIcons")
 	_reload_btn.text = ""
+	_reload_btn.custom_minimum_size = Vector2(_reload_btn.custom_minimum_size.x, _sel_item_path_edit.size.y)
 	
-	_pin_btn = tools_cont.get_node("pin_btn")
-	_pin_btn.icon = get_theme_icon("Pin", "EditorIcons")
-	_pin_btn.text = ""
 	_post_selection_fs_dock_btn = tools_cont.get_node("post_selection_fs_dock_btn")
-	_post_selection_fs_dock_btn.icon = get_theme_icon("Search", "EditorIcons")
+	#_post_selection_fs_dock_btn.icon = get_theme_icon("Search", "EditorIcons")
+	_post_selection_fs_dock_btn.icon = get_theme_icon("Signals", "EditorIcons")
+	#_post_selection_fs_dock_btn.icon = get_theme_icon("ExternalLink", "EditorIcons")
 	_post_selection_fs_dock_btn.text = ""
+	_post_selection_fs_dock_btn.custom_minimum_size = _reload_btn.custom_minimum_size
 	
 	_sel_item_info_expand_btn = tools_cont.get_node("expand_btn")
-#	_sel_item_info_expand_btn.icon = get_theme_icon("ExpandTree", "EditorIcons")
-#	_sel_item_info_expand_btn.icon = get_theme_icon("ArrowDown", "EditorIcons")
-	_sel_item_info_expand_btn.icon = get_theme_icon("TripleBar", "EditorIcons")
+	#_sel_item_info_expand_btn.icon = get_theme_icon("GuiTreeArrowRight", "EditorIcons")
+	#_sel_item_info_expand_btn.icon = get_theme_icon("GuiTreeArrowDown", "EditorIcons")
+	_sel_item_info_expand_btn.custom_minimum_size = _reload_btn.custom_minimum_size
+	#_sel_item_info_expand_btn.icon = get_theme_icon("Forward", "EditorIcons")
+	_sel_item_info_expand_btn.icon = get_theme_icon("Collapse", "EditorIcons")
 	_sel_item_info_expand_btn.text = ""
-	
-	_filter_edit = get_node("filter_cont/filter_edit")
+
+	_filter_edit = _main_cont.get_node("filter_cont/filter_edit")
 	_filter_edit.text = ""
 	_filter_edit.text_changed.connect(_on_filter_edit_text_changed)
 	
-	_tree = get_node("tree")
-	#_tree.select_mode = Tree.SELECT_SINGLE
+	_tree = _main_cont.get_node("tree")
+	if _is_multi_selection_mode:
+		_tree.select_mode = Tree.SELECT_MULTI
+	else:
+		_tree.select_mode = Tree.SELECT_SINGLE
 	_tree.gui_input.connect(_on_tree_gui_input)
+	_tree.item_selected.connect(_on_tree_item_selected)
 	_tree.multi_selected.connect(_on_tree_item_multi_selected)
 	_tree.button_clicked.connect(_on_tree_button_clicked)
 	_tree.item_mouse_selected.connect(_on_item_mouse_selected)
 	_tree.item_activated.connect(_on_tree_item_activated)
+	_tree.empty_clicked.connect(_on_tree_empty_clicked)
 	_tree.set_drag_forwarding(_tree_item_get_drag_data, _tree_item_can_drop_data, _tree_item_drop)
 	
 	_reload_btn.pressed.connect(_on_reload_btn_pressed)
@@ -171,14 +184,7 @@ func _ready():
 	_sel_item_uid_copy_btn.pressed.connect(_on_sel_item_uid_copy_btn_pressed)
 	_sel_item_name_copy_btn.pressed.connect(_on_sel_item_name_copy_btn_pressed)
 	
-	## Popups and Dialogs
-	_tree_popup = PopupMenu.new()
-	add_child(_tree_popup)
-	_tree_popup.id_pressed.connect(_tree_popup_rmb_option)
-	
 	visibility_changed.connect(_on_visibility_changed)
-	
-	
 
 func _on_visibility_changed():
 	set_process(is_visible_in_tree())
@@ -191,33 +197,13 @@ func _process(delta):
 		if _recreation_trigger >= 0.3:
 			_recreation_trigger = 0
 			reset_list("_process")
+			
+func _exit_tree():
+	if dfs_tree_popup and dfs_tree_popup.get_parent() == _popup_menu_keeper:
+		dfs_tree_popup.reparent(dfs_tree_popup_origin_parent)
 
-func get_make_dir_dialog()->SubFSFolderCreateDialog:
-	if _make_dir_dialog != null:
-		return _make_dir_dialog
-		
-	_make_dir_dialog = SubFSFolderCreateDialog.new()
-	add_child(_make_dir_dialog)
-	_make_dir_dialog.canceled.connect(_on_make_dir_canceled)
-	_make_dir_dialog.confirmed.connect(_on_make_dir_confirmed)
-	return _make_dir_dialog
-	
-func get_script_create_dialog()->ScriptCreateDialog:
-	if _script_create_dialog != null:
-		return _script_create_dialog
-	_script_create_dialog = ScriptCreateDialog.new()
-	add_child(_script_create_dialog)
-	_script_create_dialog.script_created.connect(_on_script_created)
-	return _script_create_dialog
-
-func get_remove_dialog()->SubFSRemoveDialog:
-	if _remove_dialog != null:
-		return _remove_dialog
-		
-	_remove_dialog = SubFSRemoveDialog.new()
-	add_child(_remove_dialog)
-	_remove_dialog.job_complete.connect(_on_remove_dialog_job_complete)
-	return _remove_dialog
+	if dfs_file_list_popup and dfs_file_list_popup.get_parent() == _popup_menu_keeper:
+		dfs_file_list_popup.reparent(dfs_file_list_popup_origin_parent)
 
 func _on_filter_edit_text_changed(p_text:String):
 	_was_filter_mode = _is_filter_mode
@@ -269,7 +255,7 @@ func _on_tree_gui_input(p_input:InputEvent):
 func _on_tree_item_activated():
 	if !has_selected_item():
 		return
-	
+
 	# this means double clicked!
 	var sel_item:SubFSTreeItemWrapper = get_selected_item()
 	var tree_item:TreeItem = sel_item.get_tree_item()
@@ -277,41 +263,49 @@ func _on_tree_item_activated():
 		tree_item.collapsed = !tree_item.collapsed
 	else:
 		SubFSFileOpener.open_file_item(sel_item, _fs_share)
-	
-func _on_item_mouse_selected(position: Vector2, mouse_button_index: int):
+
+func _on_item_mouse_selected(p_position: Vector2, mouse_button_index: int):
 	if !has_selected_item():
 		return
 	
 	if _tab_pref.always_post_selection_to_fs_dock:
 		_default_fs_navigate(get_selected_item().get_path())
-	
+
 	if mouse_button_index != MOUSE_BUTTON_RIGHT:
 		return
-		
-	# TODO: tweak to default fs-tree
-	#if target_tree:
-		#target_tree.item_mouse_selected.emit(position, mouse_button_index)
-		#return
 
-	if !has_selected_item():
-		return
-
-	_tree_popup.clear()
-
-	_fill_tree_popup(get_selected_item(), _tree_popup)
-	_tree_popup.position = _tree.get_screen_position() + position
-	_tree_popup.reset_size()
-	_tree_popup.popup()
+	_handle_rmb_click(p_position, mouse_button_index)
 
 func _on_tree_button_clicked(p_item:TreeItem, column: int, id: int, mouse_button_index: int):
 	pass
 
+func _on_tree_empty_clicked(p_position: Vector2, mouse_button_index: int):
+	if mouse_button_index != MOUSE_BUTTON_RIGHT:
+		return
+		
+	_select_item_wrapper(_root_wrapper, false, false, true)
+	_handle_rmb_click(p_position, mouse_button_index)
+
+func _on_tree_item_selected():
+	if _ignore_item_selected_signal:
+		return
+
+	_update_selection(_tree.get_selected(), 0, true, true)
+	
 func _on_tree_item_multi_selected(p_item:TreeItem, p_column: int, p_selected: bool):
+	if _ignore_item_selected_signal:
+		return
+
 	_update_selection(p_item, p_column, p_selected, true)
 
 func _update_selection(p_item:TreeItem, p_column: int, p_selected: bool, p_by_click:bool):
-	var wrapper:SubFSTreeItemWrapper = p_item.get_metadata(0)
+	var wrapper:SubFSTreeItemWrapper = p_item.get_metadata(0) as SubFSTreeItemWrapper
+	#print("update selection : ", wrapper.get_saved_path())
+	
 	if p_selected:
+		if !_is_multi_selection_mode:
+			_selected_items.clear()
+
 		_selected_items[wrapper.get_instance_id()] = wrapper
 		_selected_item = wrapper
 		
@@ -321,6 +315,8 @@ func _update_selection(p_item:TreeItem, p_column: int, p_selected: bool, p_by_cl
 			_default_fs_navigate(_selected_item.get_path())
 	else:
 		_selected_items.erase(wrapper.get_instance_id())
+	
+	#print("SELECTED ITEMS : ", _selected_items.size(),",", _selected_path)
 		
 	if _selected_items.is_empty():
 		_selected_item = null
@@ -347,11 +343,8 @@ func _on_pin_btn_pressed():
 	reset_list("_on_pin_btn_pressed")
 
 func _on_post_selection_fs_dock_pressed():
-	_tab_pref.always_post_selection_to_fs_dock = !_tab_pref.always_post_selection_to_fs_dock
-	_notify_pref_updated()
-	if _tab_pref.always_post_selection_to_fs_dock:
-		if has_selected_item():
-			_default_fs_navigate(get_selected_item().get_path())
+	if has_selected_item():
+		_default_fs_navigate(get_selected_item().get_path())
 
 func _default_fs_navigate(p_path:String):
 	if FileAccess.file_exists(p_path) or DirAccess.dir_exists_absolute(p_path):
@@ -389,10 +382,6 @@ func _on_sel_item_uid_edit(p_text:String):
 	else:
 		refresh_selected_path()
 
-
-#TODO: tweak to default fs-tree
-#var target_tree:Tree
-
 func post_init(p_value:SubFSShare, p_global_pref:SubFSPref, p_main_pref:SubFSMainPref, p_tab_pref:SubFSTabContentPref, p_fs_manager:SubFSManagerNode):
 	_fs_share = p_value
 	_global_pref = p_global_pref
@@ -401,20 +390,10 @@ func post_init(p_value:SubFSShare, p_global_pref:SubFSPref, p_main_pref:SubFSMai
 	_selected_path = _global_pref.get_saved_selection(_tab_pref.tab_id)
 	_fs_manager = p_fs_manager
 	_fs_manager.fs_generated.connect(_on_fs_gen)
+	if _global_pref.use_dfsi_mode:
+		print("Turn on DFSI mode...")
+		_reveal_default_fs_components()
 	reset_list("post_init")
-	
-	#TODO: tweak to default fs-tree
-	#for child in _fs_share.get_file_system_dock().get_children(true):
-		#print("FS CHILD : ",child)
-		#if child is Tree:
-			#print("CHILD CHILD TREE : ", child)
-#
-		#if child is SplitContainer:
-			#for s_child in child.get_children(true):
-				#if s_child is Tree:
-					#print("CHild CHild Tree : ", s_child)
-					#target_tree = s_child
-					#break
 
 func _on_fs_gen():
 	if !is_visible_in_tree():
@@ -440,11 +419,10 @@ func has_list()->bool:
 	return _root_wrapper != null
 
 func reset_list(p_tag:String):
-#	print(get_instance_id(), ", reset_list_attemptd : ", p_tag)
+	#print(get_instance_id(), ", reset_list_attemptd : ", p_tag)
 	_clear_list()
 	refresh_selected_path()
 	refresh_pin_btn()
-	refresh_post_btn()
 	_refresh_sel_info_expand()
 
 	if _fs_manager == null:
@@ -481,7 +459,6 @@ func reset_list(p_tag:String):
 	tab_root_tree_item.visible = true
 
 #	_tree.hide_root = _root_wrapper.get_fs_item().is_root_item()
-
 	_root_wrapper.invalid.connect(_on_item_invalid)
 
 	if !_is_filter_mode:
@@ -489,11 +466,10 @@ func reset_list(p_tag:String):
 		restore_uncollapsed_paths()
 	else:
 		find_and_select_item(_selected_path, false, true, false, false)
-		
+
 	refresh_selected_path()
 	refresh_pin_btn()
 	_refresh_sel_info_expand()
-	
 	_tree.queue_redraw()
 
 func _notify_pref_updated():
@@ -509,7 +485,7 @@ func find_and_select_item(p_target_path:String, p_find_alt_dir:bool, p_expand:bo
 	if p_target_path.is_empty():
 		p_target_path = _root_wrapper.get_path()
 		
-#	print("find_and_select_item : ", p_target_path, ", expand : ", p_expand, ", reset : ", p_reset)
+	#print("find_and_select_item : ", p_target_path, ", expand : ", p_expand, ", reset : ", p_reset)
 		
 	var found_item:SubFSTreeItemWrapper = _root_wrapper.find_item(p_target_path, p_find_alt_dir, 0)
 	if found_item == null and p_find_alt_dir:
@@ -519,16 +495,8 @@ func find_and_select_item(p_target_path:String, p_find_alt_dir:bool, p_expand:bo
 		_select_item_wrapper(found_item, p_expand, p_reset, p_notify)
 
 func _select_item_wrapper(p_item:SubFSTreeItemWrapper, p_expand:bool, p_reset:bool, p_notify:bool):
-	if p_notify:
-		# to emit tree.multi_selected signal!
-		# this method has same effect with clicked my mouse!
-		_tree.set_selected(p_item.get_tree_item(), 0)
-	else:
-		# without emit tree.multi_selected siangl
-		var ti = p_item.get_tree_item()
-		ti.select(0)
-		_update_selection(ti, 0, true, false)
-		
+	#print("_select_item_wrapper : ", p_item.get_saved_path())
+
 	if p_reset and p_item.is_dir():
 		p_item.get_fs_item().reset_sub_items()
 	
@@ -537,6 +505,18 @@ func _select_item_wrapper(p_item:SubFSTreeItemWrapper, p_expand:bool, p_reset:bo
 			p_item.get_tree_item().uncollapse_tree()
 		elif p_item.get_parent_tree_item() != null:
 			p_item.get_parent_tree_item().uncollapse_tree()
+				
+	if p_notify:
+		# to emit tree.multi_selected signal!
+		# this method has same effect with clicked my mouse!
+		_tree.set_selected(p_item.get_tree_item(), 0)
+	else:
+		_ignore_item_selected_signal = true
+		# without emit tree.multi_selected siangl
+		var ti = p_item.get_tree_item()
+		ti.select(0)
+		_update_selection(ti, 0, true, false)
+		_ignore_item_selected_signal = false
 
 	refresh_selected_path()
 	if p_notify:
@@ -584,12 +564,6 @@ func refresh_selected_path():
 	else:
 		_sel_item_uid_edit.text = ""
 
-func refresh_post_btn():
-	if _tab_pref == null:
-		_post_selection_fs_dock_btn.set_pressed_no_signal(false)
-		return
-	_post_selection_fs_dock_btn.set_pressed_no_signal(_tab_pref.always_post_selection_to_fs_dock)
-
 func refresh_pin_btn():
 	if _tab_pref == null:
 		_pin_btn.set_pressed_no_signal(false)
@@ -605,35 +579,6 @@ func _refresh_sel_info_expand():
 	_sel_item_info_expand_btn.set_pressed_no_signal(_tab_pref.sel_info_expand)
 	_more_info_cont.visible = _tab_pref.sel_info_expand
 
-## POPUP
-func _fill_tree_popup(p_item:SubFSTreeItemWrapper, p_popup:PopupMenu):
-	var new_menu:PopupMenu = PopupMenu.new()
-	new_menu.name = "New"
-	new_menu.id_pressed.connect(_tree_rmb_option)
-	
-	p_popup.add_child(new_menu);
-	p_popup.add_submenu_item("Create New", "New", PopupActions.FILE_NEW);
-	p_popup.set_item_icon(p_popup.get_item_index(PopupActions.FILE_NEW), get_theme_icon("Add", "EditorIcons"))
-	
-	new_menu.add_icon_item(get_theme_icon("Folder", "EditorIcons"), "Folder...", PopupActions.FILE_NEW_FOLDER)
-#	new_menu.add_icon_item(get_theme_icon("PackedScene", "EditorIcons"), "Scene...", PopupActions.FILE_NEW_SCENE)
-	new_menu.add_icon_item(get_theme_icon("Script", "EditorIcons"), "Script...", PopupActions.FILE_NEW_SCRIPT)
-#	new_menu.add_icon_item(get_theme_icon("Object", "EditorIcons"), "Resource...", PopupActions.FILE_NEW_RESOURCE)
-#	new_menu.add_icon_item(get_theme_icon("TextFile", "EditorIcons"), "TextFile...", PopupActions.FILE_NEW_TEXTFILE)
-	
-	p_popup.add_separator()
-	
-	p_popup.add_icon_item(get_theme_icon("Remove", "EditorIcons"), "Delete", PopupActions.FILE_DELETE)
-
-func _tree_popup_rmb_option(p_id:int):
-	if _selected_item == null:
-		return
-
-	if p_id == PopupActions.FILE_DELETE:
-		var dialog := get_remove_dialog()
-		dialog.prepare(_fs_share, SubFSTreeItemWrapper.as_paths(_get_selected_items_as_array()))
-		dialog.popup_centered()
-
 func _get_selected_items()->Dictionary:
 	return _selected_items
 	
@@ -641,56 +586,6 @@ func _get_selected_items_as_array()->Array[SubFSTreeItemWrapper]:
 	var result:Array[SubFSTreeItemWrapper]
 	result.assign(_selected_items.values())
 	return result
-
-func _tree_rmb_option(p_id:PopupActions):
-	if p_id == PopupActions.FILE_NEW_FOLDER:
-		var dialog := get_make_dir_dialog()
-		dialog.set_params(_fs_share, _get_dir_for_selected_item().get_path(), "")
-		dialog.popup_centered()
-
-	elif p_id == PopupActions.FILE_NEW_SCENE:
-		# see the document
-		var packed_scene:PackedScene
-	elif p_id == PopupActions.FILE_NEW_SCRIPT:
-#		case FILE_NEW_SCRIPT: {
-#			String fpath = current_path;
-#			if (!fpath.ends_with("/")) {
-#				fpath = fpath.get_base_dir();
-#			}
-#			make_script_dialog->config("Node", fpath.path_join("new_script.gd"), false, false);
-#			make_script_dialog->popup_centered();
-#		} break;
-
-		var dialog := get_script_create_dialog()
-		dialog.config("Node", _get_dir_for_selected_item().get_path().path_join("new_script"), false, false)
-		dialog.popup_centered()
-
-	elif p_id == PopupActions.FILE_NEW_RESOURCE:
-		# all custom classes inside project
-		ProjectSettings.get_global_class_list()
-		
-		var resource_cls_name:StringName = &"Resource"
-		
-		# all classes
-		var all_cls = ClassDB.get_class_list()
-		for cls in all_cls:
-			# finding parent class
-			var parent = ClassDB.get_parent_class(cls)
-			
-		var all_resource_inheriters:PackedStringArray =  ClassDB.get_inheriters_from_class(resource_cls_name)
-		for res_cls in all_resource_inheriters:
-			if ClassDB.can_instantiate(res_cls):
-				var res_inst:Resource = ClassDB.instantiate(res_cls) as Resource
-				res_inst.resource_path = "res://res_save_path"
-				ResourceSaver.save(res_inst)	
-	elif p_id == PopupActions.FILE_NEW_TEXTFILE:
-		pass
-
-func _on_make_dir_canceled():
-	pass
-
-func _on_make_dir_confirmed():
-	pass
 
 func _get_dir_for_selected_item()->SubFSTreeItemWrapper:
 	if _selected_item == null:
@@ -751,7 +646,6 @@ func _notification(what):
 	elif what == NOTIFICATION_DRAG_END:
 		_tree.drop_mode_flags = Tree.DROP_MODE_DISABLED
 
-
 func _get_drag_target_folder(p_point:Vector2)->String:
 	var ti:TreeItem = _tree.get_item_at_position(p_point)
 	var section:int = _tree.get_drop_section_at_position(p_point)
@@ -801,7 +695,6 @@ func _can_drop_data(at_position: Vector2, drag_data: Variant)->bool:
 
 		return true
 	return false
-
 
 func _drop_data(at_position:Vector2, drag_data:Variant):
 	## GD Plugin is so limited to move a files.
@@ -880,3 +773,176 @@ func restore_uncollapsed_paths():
 
 		for i in range(item.get_child_count()):
 			loop_item.append(item.get_child(i))
+
+
+
+# FileSystem Tweaks
+
+func _is_dfs_mode()->bool:
+	return _can_use_tweak() and _global_pref.use_dfsi_mode
+
+func _can_use_tweak()->bool:
+	return dfs_tree != null and dfs_file_list != null and dfs_split_cont != null
+
+func _reveal_default_fs_components():
+	var fs_dock := _fs_share.get_file_system_dock()
+
+	dfs_split_cont = _find_split_cont(fs_dock, 0)
+	dfs_tree = _find_fs_tree(dfs_split_cont, 0)
+	dfs_file_list = _find_file_list(dfs_split_cont, 0)
+	
+	var children = fs_dock.get_children()
+	for child:Node in children:
+		if child is PopupMenu:
+			# godot 4.0 ~ 4.2
+			# First PopupMenu is file_list_popup
+			# Second PopupMenu is tree_popup
+			if dfs_file_list_popup == null:
+				dfs_file_list_popup = child
+			else:
+				dfs_tree_popup = child
+				break
+	
+	if dfs_file_list_popup:
+		print("dfs_file_list_popup : ", dfs_file_list_popup.name)
+		dfs_file_list_popup.id_pressed.connect(_on_popup_id_pressed)
+		dfs_file_list_popup.visibility_changed.connect(_on_popup_visibility_changed)
+		dfs_file_list_popup_origin_parent = dfs_file_list_popup.get_parent()
+
+	if dfs_tree_popup:
+		print("dfs_tree_popup : ", dfs_tree_popup.name)
+		dfs_tree_popup.id_pressed.connect(_on_popup_id_pressed)
+		dfs_tree_popup.visibility_changed.connect(_on_popup_visibility_changed)
+		dfs_tree_popup_origin_parent = dfs_tree_popup.get_parent()
+		
+	for c in _popup_menu_keeper.get_children():
+		print("POPUP_MENU_KEEPER_C : ", c)
+		
+func _on_popup_id_pressed(p_id:int):
+	#print("_on_popup_id_pressed : ", p_id, ",", dfs_handle_popup_id_press)
+	if dfs_handle_popup_id_press and has_selected_item():
+		var item := get_selected_item()
+		if item.is_dir():
+			# 0 : Expand Folder,
+			if p_id == 0:
+				item.get_tree_item().collapsed = false
+			# 19 : Expand Hierachy
+			if p_id == 19:
+				item.get_tree_item().set_collapsed_recursive(false)
+			# 20 : Collapse Hierachy
+			if p_id == 20:
+				item.get_tree_item().set_collapsed_recursive(true)
+
+func _on_popup_visibility_changed():
+	#print("_on_popup_visibility_changed tree_popup : ", dfs_tree_popup.visible, ", file_list_popup : ", dfs_file_list_popup.visible)
+	if dfs_tree_popup.visible or dfs_file_list_popup.visible:
+		dfs_handle_popup_id_press = false
+
+	if dfs_tree_popup.get_parent() == _popup_menu_keeper:
+		if !dfs_tree_popup.visible:
+			#print("restore dfs_tree_popup parent")
+			dfs_handle_popup_id_press = true
+			dfs_tree_popup.reparent(dfs_tree_popup_origin_parent)
+
+	if dfs_file_list_popup.get_parent() == _popup_menu_keeper:
+		if !dfs_file_list_popup.visible:
+			#print("restore dfs_file_list_popup parent")
+			dfs_handle_popup_id_press = true
+			dfs_file_list_popup.reparent(dfs_file_list_popup_origin_parent)
+
+func _find_fs_tree(p_target:Node, p_depth:int)->Tree:
+	if p_target is Tree:
+		return p_target
+
+	var children = p_target.get_children()
+	for child:Node in children:
+		var result = _find_fs_tree(child, p_depth+1)
+		if result :
+			return result
+	return null
+
+func _find_split_cont(p_target:Node, p_depth:int)->SplitContainer:
+	# godot <= 4.1.3
+	if p_target is VSplitContainer:
+		return p_target
+
+	# godot 4.2 >=
+	if p_target is SplitContainer:
+		return p_target
+
+	var children = p_target.get_children()
+	for child:Node in children:
+		var result = _find_split_cont(child, p_depth+1)
+		if result :
+			return result
+	return null
+
+func _find_file_list(p_target:Node, p_depth:int)->ItemList:
+	if p_target is ItemList: # p_target.is_class("FileSystemList"):
+		return p_target
+
+	var children = p_target.get_children()
+	for child:Node in children:
+		var result = _find_file_list(child, p_depth+1)
+		if result :
+			return result
+	return null
+
+func _handle_rmb_click(p_pos:Vector2, p_mouse_button_index:int):
+	if !_is_dfs_mode():
+		return
+		
+	if !has_selected_item():
+		return
+
+	if dfs_tree:
+		# TODO: Support multi selection mode
+		if _is_multi_selection_mode:
+			return
+
+		_default_fs_navigate(get_selected_item().get_path())
+		
+		var selected_item := get_selected_item()
+		var dfs_dock := _fs_share.get_file_system_dock()
+		
+		var is_split_mode := dfs_file_list.is_visible_in_tree()
+		
+		print("is_split_mode : ", is_split_mode)
+		
+		# default FileSystem is in split mode
+		if is_split_mode and !selected_item.is_dir():
+			var dfs_selection = dfs_file_list.get_selected_items()
+			if !dfs_selection.is_empty():
+				var cur_pos := _tree.get_screen_position()
+				var dfs_pos := dfs_file_list.get_screen_position()
+				var emit_pos := p_pos + (cur_pos - dfs_pos)
+			
+				dfs_tree_popup.reparent(_popup_menu_keeper, true)
+				dfs_file_list_popup.reparent(_popup_menu_keeper, true)
+				dfs_file_list.item_clicked.emit(dfs_selection[0], emit_pos, p_mouse_button_index)
+		else:
+			var cur_pos := _tree.get_screen_position()
+			var dfs_pos := dfs_tree.get_screen_position()
+			var emit_pos := p_pos + (cur_pos - dfs_pos)
+			dfs_tree_popup.reparent(_popup_menu_keeper, true)
+			dfs_file_list_popup.reparent(_popup_menu_keeper, true)
+			dfs_tree.item_mouse_selected.emit(emit_pos, p_mouse_button_index)
+			
+			#dfs_tree_popup.position = _tree.get_screen_position() + p_pos
+			
+			#if selected_item.is_dir():
+				##FileMenu { FILE_OPEN
+				#var indices_to_remove:Array[int]
+				#for i in range(dfs_tree_popup.item_count):
+					#var item_id = dfs_tree_popup.get_item_id(i)
+					#if item_id == 0 or item_id == 19 or item_id == 20:
+						#indices_to_remove.append(i)
+						#dfs_tree_popup.set_item_disabled(i, true)
+						#pass
+						##dfs_tree_popup.remove_item()
+						#
+				#indices_to_remove.reverse()
+				#
+				##for i in indices_to_remove:
+					##dfs_tree_popup.remove_item(i)
+				##dfs_tree_popup.reset_size()

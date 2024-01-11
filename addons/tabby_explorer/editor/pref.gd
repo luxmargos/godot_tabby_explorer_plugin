@@ -2,7 +2,14 @@
 
 extends Resource
 
+const DEFAULT_FAVORITES_DOCK_NAME = "Favorites"
 ## A globalized preference within SubFSPlugin-scope
+
+@export var use_favorite_dock:bool = true
+@export var favorite_dock_name:String = DEFAULT_FAVORITES_DOCK_NAME
+
+# Use default File-System integration
+@export var use_dfsi_mode:bool = true
 
 @export var use_user_config:bool = true
 @export var user_config_prefix:String = ""

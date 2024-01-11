@@ -36,3 +36,10 @@ static func find_file_icon(p_ref_control:Control, p_is_valid:bool, p_file_type:S
 			file_icon = p_ref_control.get_theme_icon(&"File", &"EditorIcons")
 
 	return file_icon
+	
+static func set_theme_flat_stylebox_color(p_ref_control:Control, p_key:StringName, p_color:Color)->void:
+	if p_ref_control.has_theme_stylebox(p_key):
+		var style_box = p_ref_control.get_theme_stylebox(p_key).duplicate()
+		if style_box != null and style_box is StyleBoxFlat:
+			style_box.bg_color = p_color
+			p_ref_control.add_theme_stylebox_override(p_key, style_box)

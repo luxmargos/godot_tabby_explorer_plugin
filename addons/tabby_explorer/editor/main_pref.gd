@@ -23,3 +23,10 @@ func get_dock_names()->Array:
 	
 func get_unique_dock_name(p_name:String)->String:
 	return SubFSTextHelper.as_unique_name(p_name, get_dock_names(), -1)
+
+func fix_empty_docks()->bool:
+	if docks.size() < 1:
+		var dock_pref:SubFSDockPref = create_new_dock(true)
+		docks.append(dock_pref)
+		return true
+	return false

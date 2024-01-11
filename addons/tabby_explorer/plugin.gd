@@ -91,7 +91,7 @@ func _get_project_shared_docks_pref()->SubFSMainPref:
 	var target_file:String = target_dir + "/" + MAIN_PREF_FILE_NAME
 	_project_shared_docks_pref = _load_main_pref(target_file)
 	return _project_shared_docks_pref
-
+		
 func _load_main_pref(p_path:String)->SubFSMainPref:
 	var result:SubFSMainPref = null
 	if ResourceLoader.exists(p_path):
@@ -101,12 +101,7 @@ func _load_main_pref(p_path:String)->SubFSMainPref:
 		result.resource_path = p_path
 		ResourceSaver.save(result)
 	
-	var save:bool = false
-	while result.docks.size() < 1:
-		save = true
-		var dock_pref:SubFSDockPref = result.create_new_dock(true)
-		result.docks.append(dock_pref)
-	
+	var save:bool = result.fix_empty_docks()
 	if save:
 		ResourceSaver.save(result)
 
@@ -122,7 +117,6 @@ func _enter_tree():
 		add_child(_fs_manager_node)
 
 	_generate_all_docks()
-	
 
 func _exit_tree():
 	_clear_docks()
@@ -144,10 +138,12 @@ func _generate_docks(p_main_pref:SubFSMainPref, p_prefix:String):
 			p_prefix, dock_pref, _fs_manager_node, 
 			_get_user_docks_pref(), _get_project_shared_docks_pref())
 		sub_fs_dock.pref_updated.connect(_on_dock_pref_updated)
-		sub_fs_dock.global_pref_updated.connect(_on_global_pref_updated)
-		sub_fs_dock.user_docks_updated.connect(_on_global_pref_updated)
-		sub_fs_dock.project_shared_docks_updated.connect(_on_global_pref_updated)
 		sub_fs_dock.saved_tab_selections_updated.connect(_on_saved_tab_selections_updated)
+		
+		sub_fs_dock.settings_updated.connect(_on_settings_updated)
+		#sub_fs_dock.global_pref_updated.connect(_on_global_pref_updated)
+		#sub_fs_dock.user_docks_updated.connect(_on_global_pref_updated)
+		#sub_fs_dock.project_shared_docks_updated.connect(_on_global_pref_updated)
 
 		add_control_to_dock(dock_pref.dock_pos, sub_fs_dock)
 		
@@ -163,7 +159,9 @@ func _on_dock_pref_updated():
 func _on_saved_tab_selections_updated():
 	_save_pref()
 
-func _on_global_pref_updated():
+func _on_settings_updated():
 	_save_pref()
+	_save_user_docks_pref()
+	_save_project_shared_docks_pref()
 	_clear_docks()
 	_generate_all_docks()

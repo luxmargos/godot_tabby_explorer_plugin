@@ -6,4 +6,4 @@ extends Resource
 @export var name:String
 @export var pinned_path:String
 @export var sel_info_expand:bool = false
-@export var always_post_selection_to_fs_dock:bool = true
+@export var always_post_selection_to_fs_dock:bool = false
