@@ -6,6 +6,7 @@ const SubFSTreeItemWrapper := preload("./item/tree_item_wrapper.gd")
 const SubFSItem := preload("../fs/fs_item.gd")
 
 const SubFSShare := preload("../share.gd")
+const DFSIModeHelper = preload("../dfsi_mode_helper.gd")
 const SubFSManagerNode := preload("../fs/fs_manager_node.gd")
 
 const SubFSThemeHelper := preload("../utils/theme_helper.gd")
@@ -78,13 +79,6 @@ var _is_filter_mode:bool = false
 var _was_filter_mode:bool = false
 
 # Default FileSystem
-var dfs_split_cont:SplitContainer
-var	dfs_tree:Tree
-var dfs_tree_popup:PopupMenu
-var dfs_tree_popup_origin_parent:Node
-var dfs_file_list:ItemList
-var dfs_file_list_popup:PopupMenu
-var dfs_file_list_popup_origin_parent:Node
 var dfs_handle_popup_id_press:bool = false
 
 signal pref_updated
@@ -197,13 +191,10 @@ func _process(delta):
 		if _recreation_trigger >= 0.3:
 			_recreation_trigger = 0
 			reset_list("_process")
-			
-func _exit_tree():
-	if dfs_tree_popup and dfs_tree_popup.get_parent() == _popup_menu_keeper:
-		dfs_tree_popup.reparent(dfs_tree_popup_origin_parent)
 
-	if dfs_file_list_popup and dfs_file_list_popup.get_parent() == _popup_menu_keeper:
-		dfs_file_list_popup.reparent(dfs_file_list_popup_origin_parent)
+func _exit_tree():
+	if _has_dfsi_popup():
+		_fs_share.dfsi_mode_helper.restore_popup_menus()
 
 func _on_filter_edit_text_changed(p_text:String):
 	_was_filter_mode = _is_filter_mode
@@ -390,9 +381,11 @@ func post_init(p_value:SubFSShare, p_global_pref:SubFSPref, p_main_pref:SubFSMai
 	_selected_path = _global_pref.get_saved_selection(_tab_pref.tab_id)
 	_fs_manager = p_fs_manager
 	_fs_manager.fs_generated.connect(_on_fs_gen)
-	if _global_pref.use_dfsi_mode:
+	
+	if _is_dfs_mode():
 		print("Turn on DFSI mode...")
-		_reveal_default_fs_components()
+		_register_dfs_events()
+
 	reset_list("post_init")
 
 func _on_fs_gen():
@@ -774,50 +767,26 @@ func restore_uncollapsed_paths():
 		for i in range(item.get_child_count()):
 			loop_item.append(item.get_child(i))
 
-
-
 # FileSystem Tweaks
 
 func _is_dfs_mode()->bool:
-	return _can_use_tweak() and _global_pref.use_dfsi_mode
-
-func _can_use_tweak()->bool:
-	return dfs_tree != null and dfs_file_list != null and dfs_split_cont != null
-
-func _reveal_default_fs_components():
-	var fs_dock := _fs_share.get_file_system_dock()
-
-	dfs_split_cont = _find_split_cont(fs_dock, 0)
-	dfs_tree = _find_fs_tree(dfs_split_cont, 0)
-	dfs_file_list = _find_file_list(dfs_split_cont, 0)
+	if !_global_pref.use_dfsi_mode:
+		return false
 	
-	var children = fs_dock.get_children()
-	for child:Node in children:
-		if child is PopupMenu:
-			# godot 4.0 ~ 4.2
-			# First PopupMenu is file_list_popup
-			# Second PopupMenu is tree_popup
-			if dfs_file_list_popup == null:
-				dfs_file_list_popup = child
-			else:
-				dfs_tree_popup = child
-				break
+	_fs_share.check_dfsi_mode_availability()
+	return _fs_share.dfsi_mode_helper.is_enabled()
 	
-	if dfs_file_list_popup:
-		print("dfs_file_list_popup : ", dfs_file_list_popup.name)
-		dfs_file_list_popup.id_pressed.connect(_on_popup_id_pressed)
-		dfs_file_list_popup.visibility_changed.connect(_on_popup_visibility_changed)
-		dfs_file_list_popup_origin_parent = dfs_file_list_popup.get_parent()
+func _register_dfs_events():
+	if _fs_share.dfsi_mode_helper.file_list_popup:
+		print("file_list_popup : ", _fs_share.dfsi_mode_helper.file_list_popup.name)
+		_fs_share.dfsi_mode_helper.file_list_popup.id_pressed.connect(_on_popup_id_pressed)
+		_fs_share.dfsi_mode_helper.file_list_popup.visibility_changed.connect(_on_popup_visibility_changed)
 
-	if dfs_tree_popup:
-		print("dfs_tree_popup : ", dfs_tree_popup.name)
-		dfs_tree_popup.id_pressed.connect(_on_popup_id_pressed)
-		dfs_tree_popup.visibility_changed.connect(_on_popup_visibility_changed)
-		dfs_tree_popup_origin_parent = dfs_tree_popup.get_parent()
-		
-	for c in _popup_menu_keeper.get_children():
-		print("POPUP_MENU_KEEPER_C : ", c)
-		
+	if _fs_share.dfsi_mode_helper.tree_popup:
+		print("tree_popup : ", _fs_share.dfsi_mode_helper.tree_popup.name)
+		_fs_share.dfsi_mode_helper.tree_popup.id_pressed.connect(_on_popup_id_pressed)
+		_fs_share.dfsi_mode_helper.tree_popup.visibility_changed.connect(_on_popup_visibility_changed)
+
 func _on_popup_id_pressed(p_id:int):
 	#print("_on_popup_id_pressed : ", p_id, ",", dfs_handle_popup_id_press)
 	if dfs_handle_popup_id_press and has_selected_item():
@@ -833,116 +802,89 @@ func _on_popup_id_pressed(p_id:int):
 			if p_id == 20:
 				item.get_tree_item().set_collapsed_recursive(true)
 
+func _has_dfsi_popup():
+	if _fs_share == null:
+		return false
+		
+	if !_fs_share.dfsi_mode_helper.is_enabled():
+		return false
+
+	if _fs_share.dfsi_mode_helper.tree_popup.get_parent() == _popup_menu_keeper:
+		return true
+
+	if _fs_share.dfsi_mode_helper.file_list_popup.get_parent() == _popup_menu_keeper:
+		return true
+		
+	return false
+		
 func _on_popup_visibility_changed():
-	#print("_on_popup_visibility_changed tree_popup : ", dfs_tree_popup.visible, ", file_list_popup : ", dfs_file_list_popup.visible)
-	if dfs_tree_popup.visible or dfs_file_list_popup.visible:
+	#print("_on_popup_visibility_changed tree_popup : ", tree_popup.visible, ", file_list_popup : ", file_list_popup.visible)
+	if _fs_share.dfsi_mode_helper.tree_popup.visible or _fs_share.dfsi_mode_helper.file_list_popup.visible:
 		dfs_handle_popup_id_press = false
 
-	if dfs_tree_popup.get_parent() == _popup_menu_keeper:
-		if !dfs_tree_popup.visible:
-			#print("restore dfs_tree_popup parent")
-			dfs_handle_popup_id_press = true
-			dfs_tree_popup.reparent(dfs_tree_popup_origin_parent)
+	var attempt_restore:bool = false
+	
+	if _has_dfsi_popup() and !_fs_share.dfsi_mode_helper.tree_popup.visible and !_fs_share.dfsi_mode_helper.file_list_popup.visible:
+		attempt_restore = true
 
-	if dfs_file_list_popup.get_parent() == _popup_menu_keeper:
-		if !dfs_file_list_popup.visible:
-			#print("restore dfs_file_list_popup parent")
-			dfs_handle_popup_id_press = true
-			dfs_file_list_popup.reparent(dfs_file_list_popup_origin_parent)
-
-func _find_fs_tree(p_target:Node, p_depth:int)->Tree:
-	if p_target is Tree:
-		return p_target
-
-	var children = p_target.get_children()
-	for child:Node in children:
-		var result = _find_fs_tree(child, p_depth+1)
-		if result :
-			return result
-	return null
-
-func _find_split_cont(p_target:Node, p_depth:int)->SplitContainer:
-	# godot <= 4.1.3
-	if p_target is VSplitContainer:
-		return p_target
-
-	# godot 4.2 >=
-	if p_target is SplitContainer:
-		return p_target
-
-	var children = p_target.get_children()
-	for child:Node in children:
-		var result = _find_split_cont(child, p_depth+1)
-		if result :
-			return result
-	return null
-
-func _find_file_list(p_target:Node, p_depth:int)->ItemList:
-	if p_target is ItemList: # p_target.is_class("FileSystemList"):
-		return p_target
-
-	var children = p_target.get_children()
-	for child:Node in children:
-		var result = _find_file_list(child, p_depth+1)
-		if result :
-			return result
-	return null
+	if attempt_restore:
+		#_on_popup_id_pressed will occurs
+		#print("restore dfs_tree_popup parent")
+		dfs_handle_popup_id_press = true
+		_fs_share.dfsi_mode_helper.restore_popup_menus()
 
 func _handle_rmb_click(p_pos:Vector2, p_mouse_button_index:int):
 	if !_is_dfs_mode():
 		return
-		
 	if !has_selected_item():
 		return
 
-	if dfs_tree:
-		# TODO: Support multi selection mode
-		if _is_multi_selection_mode:
-			return
+	# TODO: Support multi selection mode
+	if _is_multi_selection_mode:
+		return
 
-		_default_fs_navigate(get_selected_item().get_path())
-		
-		var selected_item := get_selected_item()
-		var dfs_dock := _fs_share.get_file_system_dock()
-		
-		var is_split_mode := dfs_file_list.is_visible_in_tree()
-		
-		print("is_split_mode : ", is_split_mode)
-		
-		# default FileSystem is in split mode
-		if is_split_mode and !selected_item.is_dir():
-			var dfs_selection = dfs_file_list.get_selected_items()
-			if !dfs_selection.is_empty():
-				var cur_pos := _tree.get_screen_position()
-				var dfs_pos := dfs_file_list.get_screen_position()
-				var emit_pos := p_pos + (cur_pos - dfs_pos)
-			
-				dfs_tree_popup.reparent(_popup_menu_keeper, true)
-				dfs_file_list_popup.reparent(_popup_menu_keeper, true)
-				dfs_file_list.item_clicked.emit(dfs_selection[0], emit_pos, p_mouse_button_index)
-		else:
+	_default_fs_navigate(get_selected_item().get_path())
+	
+	var selected_item := get_selected_item()
+	var dfs_dock := _fs_share.get_file_system_dock()
+	
+	print("splite_mode : ", _fs_share.dfsi_mode_helper.is_split_mode)
+	# default FileSystem is in split mode
+	
+	if _fs_share.dfsi_mode_helper.is_split_mode and !selected_item.is_dir():
+		var dfs_selection = _fs_share.dfsi_mode_helper.file_list.get_selected_items()
+		if !dfs_selection.is_empty():
 			var cur_pos := _tree.get_screen_position()
-			var dfs_pos := dfs_tree.get_screen_position()
+			var dfs_pos := _fs_share.dfsi_mode_helper.file_list.get_screen_position()
 			var emit_pos := p_pos + (cur_pos - dfs_pos)
-			dfs_tree_popup.reparent(_popup_menu_keeper, true)
-			dfs_file_list_popup.reparent(_popup_menu_keeper, true)
-			dfs_tree.item_mouse_selected.emit(emit_pos, p_mouse_button_index)
-			
-			#dfs_tree_popup.position = _tree.get_screen_position() + p_pos
-			
-			#if selected_item.is_dir():
-				##FileMenu { FILE_OPEN
-				#var indices_to_remove:Array[int]
-				#for i in range(dfs_tree_popup.item_count):
-					#var item_id = dfs_tree_popup.get_item_id(i)
-					#if item_id == 0 or item_id == 19 or item_id == 20:
-						#indices_to_remove.append(i)
-						#dfs_tree_popup.set_item_disabled(i, true)
-						#pass
-						##dfs_tree_popup.remove_item()
-						#
-				#indices_to_remove.reverse()
-				#
-				##for i in indices_to_remove:
-					##dfs_tree_popup.remove_item(i)
-				##dfs_tree_popup.reset_size()
+		
+			#_fs_share.dfsi_mode_helper.tree_popup.reparent(_popup_menu_keeper, true)
+			_fs_share.dfsi_mode_helper.file_list_popup.reparent(_popup_menu_keeper, true)
+			_fs_share.dfsi_mode_helper.file_list.item_clicked.emit(dfs_selection[0], emit_pos, p_mouse_button_index)
+	else:
+		var cur_pos := _tree.get_screen_position()
+		var dfs_pos := _fs_share.dfsi_mode_helper.tree.get_screen_position()
+		var emit_pos := p_pos + (cur_pos - dfs_pos)
+
+		_fs_share.dfsi_mode_helper.tree_popup.reparent(_popup_menu_keeper, true)
+		_fs_share.dfsi_mode_helper.file_list_popup.reparent(_popup_menu_keeper, true)
+		_fs_share.dfsi_mode_helper.tree.item_mouse_selected.emit(emit_pos, p_mouse_button_index)
+		
+		#tree_popup.position = _tree.get_screen_position() + p_pos
+		
+		#if selected_item.is_dir():
+			##FileMenu { FILE_OPEN
+			#var indices_to_remove:Array[int]
+			#for i in range(tree_popup.item_count):
+				#var item_id = tree_popup.get_item_id(i)
+				#if item_id == 0 or item_id == 19 or item_id == 20:
+					#indices_to_remove.append(i)
+					#tree_popup.set_item_disabled(i, true)
+					#pass
+					##tree_popup.remove_item()
+					#
+			#indices_to_remove.reverse()
+			#
+			##for i in indices_to_remove:
+				##tree_popup.remove_item(i)
+			##tree_popup.reset_size()

@@ -110,6 +110,7 @@ func _load_main_pref(p_path:String)->SubFSMainPref:
 func _enter_tree():
 	if _sub_fs_share == null:
 		_sub_fs_share = SubFSShare.new(get_editor_interface())
+		_sub_fs_share.check_dfsi_mode_availability()
 
 	if _fs_manager_node == null:
 		_fs_manager_node = SubFSManagerNode.new()

@@ -120,6 +120,7 @@ func show_config():
 	_project_docks_config.show_config()
 
 func _save_settings():
+	_fs_share.dfsi_mode_helper.restore_popup_menus()
 	_global_pref.use_favorite_dock = _dock_for_favorites_checkbox.button_pressed
 	_global_pref.favorite_dock_name = _favorites_dock_name.text
 	if _global_pref.favorite_dock_name.strip_edges().is_empty():

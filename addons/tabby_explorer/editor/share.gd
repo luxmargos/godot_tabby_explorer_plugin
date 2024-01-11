@@ -2,10 +2,15 @@
 
 extends RefCounted
 
+const DFSIModeHelper = preload("./dfsi_mode_helper.gd")
+
 var _ei:EditorInterface
+var dfsi_mode_helper:DFSIModeHelper
 
 func _init(p_ei:EditorInterface):
+	print("init dfsi_mode_helper")
 	_ei = p_ei
+	dfsi_mode_helper = DFSIModeHelper.new()
 
 func get_editor_interface()->EditorInterface:
 	return _ei
@@ -25,3 +30,7 @@ func get_resource_previewer()->EditorResourcePreview:
 func scan(p_tag:String):
 #	print("scan : ", p_tag)
 	get_editor_file_system().scan()
+	
+func check_dfsi_mode_availability():
+	dfsi_mode_helper.check_availability(get_file_system_dock())
+
