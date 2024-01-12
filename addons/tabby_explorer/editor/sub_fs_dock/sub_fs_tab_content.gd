@@ -383,7 +383,7 @@ func post_init(p_value:SubFSShare, p_global_pref:SubFSPref, p_main_pref:SubFSMai
 	_fs_manager.fs_generated.connect(_on_fs_gen)
 	
 	if _is_dfs_mode():
-		print("Turn on DFSI mode...")
+		#print("Turn on DFSI mode...")
 		_register_dfs_events()
 
 	reset_list("post_init")
@@ -709,10 +709,6 @@ func _drop_data(at_position:Vector2, drag_data:Variant):
 				if fnames[i].trim_suffix("/").get_base_dir() != target_dir:
 					to_move.push_back({"path":fnames[i], "is_file":!fnames[i].ends_with("/")})
 
-			if !to_move.is_empty():
-				for item in to_move:
-					print("item to move : ", item)
-
 func _tree_item_get_drag_data(at_position: Vector2):
 	return _get_drag_data(at_position)
 
@@ -778,18 +774,19 @@ func _is_dfs_mode()->bool:
 	
 func _register_dfs_events():
 	if _fs_share.dfsi_mode_helper.file_list_popup:
-		print("file_list_popup : ", _fs_share.dfsi_mode_helper.file_list_popup.name)
+		#print("file_list_popup : ", _fs_share.dfsi_mode_helper.file_list_popup.name)
 		_fs_share.dfsi_mode_helper.file_list_popup.id_pressed.connect(_on_popup_id_pressed)
 		_fs_share.dfsi_mode_helper.file_list_popup.visibility_changed.connect(_on_popup_visibility_changed)
 
 	if _fs_share.dfsi_mode_helper.tree_popup:
-		print("tree_popup : ", _fs_share.dfsi_mode_helper.tree_popup.name)
+		#print("tree_popup : ", _fs_share.dfsi_mode_helper.tree_popup.name)
 		_fs_share.dfsi_mode_helper.tree_popup.id_pressed.connect(_on_popup_id_pressed)
 		_fs_share.dfsi_mode_helper.tree_popup.visibility_changed.connect(_on_popup_visibility_changed)
 
 func _on_popup_id_pressed(p_id:int):
 	#print("_on_popup_id_pressed : ", p_id, ",", dfs_handle_popup_id_press)
 	if dfs_handle_popup_id_press and has_selected_item():
+		dfs_handle_popup_id_press = false
 		var item := get_selected_item()
 		if item.is_dir():
 			# 0 : Expand Folder,
@@ -847,8 +844,9 @@ func _handle_rmb_click(p_pos:Vector2, p_mouse_button_index:int):
 	
 	var selected_item := get_selected_item()
 	var dfs_dock := _fs_share.get_file_system_dock()
+	var dfs_tree_popup := _fs_share.dfsi_mode_helper.tree_popup
+	var dfs_file_list_popup := _fs_share.dfsi_mode_helper.file_list_popup
 	
-	print("splite_mode : ", _fs_share.dfsi_mode_helper.is_split_mode)
 	# default FileSystem is in split mode
 	
 	if _fs_share.dfsi_mode_helper.is_split_mode and !selected_item.is_dir():
@@ -858,16 +856,16 @@ func _handle_rmb_click(p_pos:Vector2, p_mouse_button_index:int):
 			var dfs_pos := _fs_share.dfsi_mode_helper.file_list.get_screen_position()
 			var emit_pos := p_pos + (cur_pos - dfs_pos)
 		
-			#_fs_share.dfsi_mode_helper.tree_popup.reparent(_popup_menu_keeper, true)
-			_fs_share.dfsi_mode_helper.file_list_popup.reparent(_popup_menu_keeper, true)
+			dfs_tree_popup.reparent(_popup_menu_keeper, true)
+			dfs_file_list_popup.reparent(_popup_menu_keeper, true)
 			_fs_share.dfsi_mode_helper.file_list.item_clicked.emit(dfs_selection[0], emit_pos, p_mouse_button_index)
 	else:
 		var cur_pos := _tree.get_screen_position()
 		var dfs_pos := _fs_share.dfsi_mode_helper.tree.get_screen_position()
 		var emit_pos := p_pos + (cur_pos - dfs_pos)
 
-		_fs_share.dfsi_mode_helper.tree_popup.reparent(_popup_menu_keeper, true)
-		_fs_share.dfsi_mode_helper.file_list_popup.reparent(_popup_menu_keeper, true)
+		dfs_tree_popup.reparent(_popup_menu_keeper, true)
+		dfs_file_list_popup.reparent(_popup_menu_keeper, true)
 		_fs_share.dfsi_mode_helper.tree.item_mouse_selected.emit(emit_pos, p_mouse_button_index)
 		
 		#tree_popup.position = _tree.get_screen_position() + p_pos
@@ -888,3 +886,27 @@ func _handle_rmb_click(p_pos:Vector2, p_mouse_button_index:int):
 			##for i in indices_to_remove:
 				##tree_popup.remove_item(i)
 			##tree_popup.reset_size()
+	
+	
+	var FILE_RENAME:int = 9
+	var black_list:Array = [FILE_RENAME, "FolderColor"]
+	var indices_to_remove:Array[int]
+	for i in range(dfs_tree_popup.item_count):
+		var submenu := dfs_tree_popup.get_item_submenu(i)
+		var item_id := dfs_tree_popup.get_item_id(i)
+		if black_list.has(item_id) or black_list.has(submenu):
+			indices_to_remove.append(i)
+	for i in indices_to_remove:
+		dfs_tree_popup.remove_item(i)
+	dfs_tree_popup.reset_size()
+	indices_to_remove.clear()
+
+	for i in range(dfs_file_list_popup.item_count):
+		var submenu := dfs_file_list_popup.get_item_submenu(i)
+		var item_id = dfs_file_list_popup.get_item_id(i)
+		if black_list.has(item_id) or black_list.has(submenu):
+			indices_to_remove.append(i)
+	for i in indices_to_remove:
+		dfs_file_list_popup.remove_item(i)
+	dfs_file_list_popup.reset_size()
+	indices_to_remove.clear()

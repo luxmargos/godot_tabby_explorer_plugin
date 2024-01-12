@@ -1,0 +1,26 @@
+[gd_scene load_steps=3 format=3 uid="uid://65lllg1csobb"]
+
+[ext_resource type="Script" path="res://addons/tabby_explorer/editor/sub_fs_dock/sub_fs_fav_dock.gd" id="1_4tmvr"]
+[ext_resource type="PackedScene" uid="uid://dnrd5u6usdt5j" path="res://addons/tabby_explorer/editor/sub_fs_dock/sub_fs_dock_main.tscn" id="2_ebo5d"]
+
+[node name="Sub FileSystem" type="MarginContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_4tmvr")
+
+[node name="main" parent="." instance=ExtResource("2_ebo5d")]
+layout_mode = 2
+
+[node name="config_cont" type="MarginContainer" parent="."]
+layout_mode = 2
+
+[node name="no_folders_label" type="Label" parent="."]
+custom_minimum_size = Vector2(150, 0)
+layout_mode = 2
+text = "No folder(s) found in Favorites"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2

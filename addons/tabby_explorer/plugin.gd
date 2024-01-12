@@ -2,7 +2,9 @@
 
 extends EditorPlugin
 
-const SubFsPackedScene: = preload("./editor/sub_fs_dock/sub_fs_dock.tscn")
+const SubFsDockPackedScene: = preload("./editor/sub_fs_dock/sub_fs_dock.tscn")
+const SubFsFavDockPackedScene: = preload("./editor/sub_fs_dock/sub_fs_fav_dock.tscn")
+
 const SubFSDockPref := preload("./editor/dock_pref.gd")
 const SubFSMainPref := preload("./editor/main_pref.gd")
 const SubFSPref := preload("./editor/pref.gd")
@@ -10,6 +12,7 @@ const SubFSPref := preload("./editor/pref.gd")
 const SubFSManagerNode := preload("./editor/fs/fs_manager_node.gd")
 const SubFSShare := preload("./editor/share.gd")
 const SubFSDock := preload("./editor/sub_fs_dock/sub_fs_dock.gd")
+const SubFSFavDock := preload("./editor/sub_fs_dock/sub_fs_fav_dock.gd")
 
 var _pref:SubFSPref
 var _user_docks_pref:SubFSMainPref
@@ -125,17 +128,31 @@ func _exit_tree():
 func _generate_all_docks():
 	_clear_docks()
 	
+	var p := _get_pref()
+
 	if _get_pref().use_user_config:
-		_generate_docks(_get_user_docks_pref(), _pref.user_config_prefix)
+		_generate_docks(_get_user_docks_pref(), p.user_config_prefix)
 
 	if _get_pref().use_project_shared_config:
-		_generate_docks(_get_project_shared_docks_pref(), _pref.project_shared_config_prefix)
+		_generate_docks(_get_project_shared_docks_pref(), p.project_shared_config_prefix)
+	
+	if p.use_favorite_dock:
+		var fav_docks_pref:SubFSMainPref = SubFSMainPref.new()
+		var fav_dock_pref:SubFSDockPref = SubFSDockPref.new()
+		fav_docks_pref.docks.append(fav_dock_pref)
+		var fav_dock:SubFSFavDock = SubFsFavDockPackedScene.instantiate()
+		_all_docks.append(fav_dock)
+		fav_dock.post_init(_sub_fs_share, p, fav_docks_pref, "", fav_dock_pref, _fs_manager_node, 
+				_get_user_docks_pref(), _get_project_shared_docks_pref())
+		fav_dock.saved_tab_selections_updated.connect(_on_saved_tab_selections_updated)
+		add_control_to_dock(fav_dock_pref.dock_pos, fav_dock)
 
 func _generate_docks(p_main_pref:SubFSMainPref, p_prefix:String):
+	var p := _get_pref()
 	for dock_pref in p_main_pref.docks:
-		var sub_fs_dock:SubFSDock = SubFsPackedScene.instantiate()
+		var sub_fs_dock:SubFSDock = SubFsDockPackedScene.instantiate()
 		_all_docks.append(sub_fs_dock)
-		sub_fs_dock.post_init(_sub_fs_share, _pref, p_main_pref, 
+		sub_fs_dock.post_init(_sub_fs_share, p, p_main_pref, 
 			p_prefix, dock_pref, _fs_manager_node, 
 			_get_user_docks_pref(), _get_project_shared_docks_pref())
 		sub_fs_dock.pref_updated.connect(_on_dock_pref_updated)
@@ -147,7 +164,7 @@ func _generate_docks(p_main_pref:SubFSMainPref, p_prefix:String):
 		#sub_fs_dock.project_shared_docks_updated.connect(_on_global_pref_updated)
 
 		add_control_to_dock(dock_pref.dock_pos, sub_fs_dock)
-		
+
 func _clear_docks():
 	for dock in _all_docks:
 		remove_control_from_docks(dock)

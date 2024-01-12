@@ -11,12 +11,10 @@ I felt what I'm so exhauted and spending lot of time with scrolling up and down
 through the entire of my huge resources. The favorite system was not enough to me.
 That was a reason why I built this plugin.
 
-<img src="./doc/screenshot.png" width="800"/>
-<img src="./doc/screenshot2.png" width="400"/>
-
 ## Supported Version (Currently tested)
 
-* godot 4.1 or higher
+* godot 4.1
+* godot 4.2 or higher
 
 ## Key Features
 

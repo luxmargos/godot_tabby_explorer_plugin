@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://dhl4kwnfr4cd2"]
+
+[node name="tab_container" type="TabContainer"]
+size_flags_vertical = 3
+tabs_visible = false

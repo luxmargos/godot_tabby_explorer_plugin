@@ -62,12 +62,15 @@ func _ready():
 	var heading_cont:Control = get_node("config_inner/VBoxContainer/config_scroll_container/scroll_inner/heading_controls")
 	_donate_btn = heading_cont.get_node("donate_btn")
 	_donate_btn.pressed.connect(_on_donate_btn_pressed)
-	
+	_donate_btn.icon = load("uid://bywj5piii6cfd")
+
 	_author_btn = heading_cont.get_node("author_btn")
 	_author_btn.pressed.connect(_on_author_btn_pressed)
-	
+	_author_btn.icon = load("uid://csm3pci0kgkc6")
+
 	_repository_btn = heading_cont.get_node("repo_btn")
 	_repository_btn.pressed.connect(_on_repository_btn_pressed)
+	_repository_btn.icon = load("uid://clobh344t1pa5")
 	
 	var inner_cont:Control = get_node("config_inner/VBoxContainer/config_scroll_container/scroll_inner")
 	var config_opts:Control = inner_cont.find_child("options_container")

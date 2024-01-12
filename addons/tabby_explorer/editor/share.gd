@@ -8,7 +8,6 @@ var _ei:EditorInterface
 var dfsi_mode_helper:DFSIModeHelper
 
 func _init(p_ei:EditorInterface):
-	print("init dfsi_mode_helper")
 	_ei = p_ei
 	dfsi_mode_helper = DFSIModeHelper.new()
 
@@ -28,7 +27,6 @@ func get_resource_previewer()->EditorResourcePreview:
 	return get_editor_interface().get_resource_previewer()
 	
 func scan(p_tag:String):
-#	print("scan : ", p_tag)
 	get_editor_file_system().scan()
 	
 func check_dfsi_mode_availability():

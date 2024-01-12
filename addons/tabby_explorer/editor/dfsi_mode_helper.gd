@@ -44,11 +44,8 @@ func check_availability(p_fs_dock:FileSystemDock):
 func determine_split_mode():
 	if current_fs.is_visible_in_tree():
 		is_split_mode = tree.is_visible_in_tree() and file_list.is_visible_in_tree()
-		print("determine_split_mode : ", is_split_mode)
 
 func reveal_default_fs_components(p_fs_dock:FileSystemDock):
-	print("reveal_default_fs_components")
-	
 	p_fs_dock.visibility_changed.connect(determine_split_mode)
 
 	current_fs = p_fs_dock
@@ -63,7 +60,7 @@ func reveal_default_fs_components(p_fs_dock:FileSystemDock):
 		file_list.visibility_changed.connect(determine_split_mode)
 
 	var children = p_fs_dock.get_children()
-	for child:Node in children:
+	for child in children:
 		if child is PopupMenu:
 			# godot 4.0 ~ 4.2
 			# First PopupMenu is file_list_popup
@@ -81,7 +78,7 @@ func _find_fs_tree(p_target:Node, p_depth:int)->Tree:
 		return p_target
 
 	var children = p_target.get_children()
-	for child:Node in children:
+	for child in children:
 		var result = _find_fs_tree(child, p_depth+1)
 		if result :
 			return result
@@ -99,8 +96,6 @@ func restore_popup_menus()->bool:
 	if file_list_popup.get_parent() != file_list_popup_origin_parent:
 		file_list_popup.reparent(file_list_popup_origin_parent)
 		result = true
-		
-	print("restore_popup_menus : ", result)
 	
 	return result
 
@@ -114,7 +109,7 @@ func _find_split_cont(p_target:Node, p_depth:int)->SplitContainer:
 		return p_target
 
 	var children = p_target.get_children()
-	for child:Node in children:
+	for child in children:
 		var result = _find_split_cont(child, p_depth+1)
 		if result :
 			return result
@@ -125,7 +120,7 @@ func _find_file_list(p_target:Node, p_depth:int)->ItemList:
 		return p_target
 
 	var children = p_target.get_children()
-	for child:Node in children:
+	for child in children:
 		var result = _find_file_list(child, p_depth+1)
 		if result :
 			return result

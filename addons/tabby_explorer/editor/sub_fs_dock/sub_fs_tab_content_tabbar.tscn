@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://ba7q8flep56oh"]
+
+[node name="tab_bar" type="TabBar"]
+size_flags_horizontal = 3
+tab_close_display_policy = 1
+drag_to_rearrange_enabled = true

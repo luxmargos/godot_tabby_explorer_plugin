@@ -7,3 +7,5 @@ extends Resource
 @export var pinned_path:String
 @export var sel_info_expand:bool = false
 @export var always_post_selection_to_fs_dock:bool = false
+
+@export var fav_path:String
