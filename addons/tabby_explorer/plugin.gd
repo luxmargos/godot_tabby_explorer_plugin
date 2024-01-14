@@ -145,6 +145,7 @@ func _generate_all_docks():
 		fav_dock.post_init(_sub_fs_share, p, fav_docks_pref, "", fav_dock_pref, _fs_manager_node, 
 				_get_user_docks_pref(), _get_project_shared_docks_pref())
 		fav_dock.saved_tab_selections_updated.connect(_on_saved_tab_selections_updated)
+		fav_dock.settings_updated.connect(_on_settings_updated)
 		add_control_to_dock(fav_dock_pref.dock_pos, fav_dock)
 
 func _generate_docks(p_main_pref:SubFSMainPref, p_prefix:String):
@@ -157,19 +158,16 @@ func _generate_docks(p_main_pref:SubFSMainPref, p_prefix:String):
 			_get_user_docks_pref(), _get_project_shared_docks_pref())
 		sub_fs_dock.pref_updated.connect(_on_dock_pref_updated)
 		sub_fs_dock.saved_tab_selections_updated.connect(_on_saved_tab_selections_updated)
-		
 		sub_fs_dock.settings_updated.connect(_on_settings_updated)
-		#sub_fs_dock.global_pref_updated.connect(_on_global_pref_updated)
-		#sub_fs_dock.user_docks_updated.connect(_on_global_pref_updated)
-		#sub_fs_dock.project_shared_docks_updated.connect(_on_global_pref_updated)
 
 		add_control_to_dock(dock_pref.dock_pos, sub_fs_dock)
 
 func _clear_docks():
 	for dock in _all_docks:
 		remove_control_from_docks(dock)
+		dock.queue_free()
 	_all_docks.clear()
-	
+
 func _on_dock_pref_updated():
 	_save_user_docks_pref()
 	_save_project_shared_docks_pref()

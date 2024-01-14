@@ -322,7 +322,6 @@ func _set_tabbar_events():
 	_tab_bar.tab_close_pressed.connect(_on_tab_close_pressed)
 	_tab_bar.active_tab_rearranged.connect(_on_active_tab_rearranged)
 	
-	
 func _refresh_view_state():
 	if _is_config_mode:
 		_config_cont.visible = true

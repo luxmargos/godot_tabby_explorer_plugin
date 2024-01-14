@@ -6,6 +6,7 @@ const DEFAULT_FAVORITES_DOCK_NAME = "Favorites"
 ## A globalized preference within SubFSPlugin-scope
 
 @export var use_favorite_dock:bool = true
+@export var favorite_dock_refresh_interval:float = 3.0
 @export var favorite_dock_name:String = DEFAULT_FAVORITES_DOCK_NAME
 
 # Use default File-System integration

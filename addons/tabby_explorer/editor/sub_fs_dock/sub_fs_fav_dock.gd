@@ -68,8 +68,12 @@ func reset_favorites()->bool:
 	return true
 
 func _process(p_delta:float):
+	if _global_pref == null:
+		set_process(false)
+		return
+
 	_changes_detection_intv += p_delta
-	if _changes_detection_intv >= 3.0:
+	if _changes_detection_intv >= _global_pref.favorite_dock_refresh_interval:
 		_changes_detection_intv = 0.0
 		if reset_favorites():
 			generate_tabs()

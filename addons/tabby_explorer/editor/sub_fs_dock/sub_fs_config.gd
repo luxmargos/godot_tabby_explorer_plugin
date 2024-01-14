@@ -11,15 +11,12 @@ const SubFSPref := preload("../pref.gd")
 const ConfigDockItemPackedScene := preload("./sub_fs_config_dock_item.tscn")
 const SubFSConfigDockItem := preload("./sub_fs_config_dock_item.gd")
 const SubFSTextHelper := preload("../utils/text_helper.gd")
-
 const SubFSDocksConfig := preload("./sub_fs_config_docks.gd")
-
 const SubFSThemeHelper := preload("../utils/theme_helper.gd")
 
 var _cancel_btn:Button
 var _apply_options:Button
 
-var _author_btn:Button
 var _repository_btn:Button
 var _donate_btn:Button
 
@@ -62,15 +59,9 @@ func _ready():
 	var heading_cont:Control = get_node("config_inner/VBoxContainer/config_scroll_container/scroll_inner/heading_controls")
 	_donate_btn = heading_cont.get_node("donate_btn")
 	_donate_btn.pressed.connect(_on_donate_btn_pressed)
-	_donate_btn.icon = load("uid://bywj5piii6cfd")
-
-	_author_btn = heading_cont.get_node("author_btn")
-	_author_btn.pressed.connect(_on_author_btn_pressed)
-	_author_btn.icon = load("uid://csm3pci0kgkc6")
 
 	_repository_btn = heading_cont.get_node("repo_btn")
 	_repository_btn.pressed.connect(_on_repository_btn_pressed)
-	_repository_btn.icon = load("uid://clobh344t1pa5")
 	
 	var inner_cont:Control = get_node("config_inner/VBoxContainer/config_scroll_container/scroll_inner")
 	var config_opts:Control = inner_cont.find_child("options_container")
@@ -98,10 +89,7 @@ func set_initial_items(p_fs_share:SubFSShare, p_global_pref:SubFSPref, p_user_pr
 	_project_shared_docks_pref = p_project_pref
 
 func _on_donate_btn_pressed():
-	OS.shell_open("https://www.buymeacoffee.com/luxmargos")
-
-func _on_author_btn_pressed():
-	OS.shell_open("https://github.com/luxmargos")
+	OS.shell_open("https://github.com/luxmargos/godot_tabby_explorer_plugin")
 
 func _on_repository_btn_pressed():
 	OS.shell_open("https://github.com/luxmargos/godot_tabby_explorer_plugin")

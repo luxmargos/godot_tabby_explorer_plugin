@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://addons/tabby_explorer/editor/sub_fs_dock/sub_fs_config.gd" id="1_87stq"]
 [ext_resource type="PackedScene" uid="uid://c81nrsifb1lwy" path="res://addons/tabby_explorer/editor/sub_fs_dock/sub_fs_config_docks.tscn" id="2_nlk06"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4l06h"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0tu10"]
 content_margin_left = 4.0
 content_margin_top = 4.0
 content_margin_right = 4.0
@@ -35,7 +35,7 @@ corner_radius_bottom_right = 4
 corner_radius_bottom_left = 4
 corner_detail = 4
 
-[sub_resource type="Image" id="Image_d3c61"]
+[sub_resource type="Image" id="Image_unbvd"]
 data = {
 "data": PackedByteArray(255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 94, 94, 127, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 231, 255, 94, 94, 54, 255, 94, 94, 57, 255, 93, 93, 233, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 93, 93, 41, 255, 255, 255, 0, 255, 255, 255, 0, 255, 97, 97, 42, 255, 93, 93, 233, 255, 93, 93, 232, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 44, 255, 255, 255, 0, 255, 97, 97, 42, 255, 97, 97, 42, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 96, 96, 45, 255, 93, 93, 235, 255, 94, 94, 234, 255, 95, 95, 43, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 93, 93, 235, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 233, 255, 95, 95, 59, 255, 96, 96, 61, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 93, 93, 255, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0, 255, 255, 255, 0),
 "format": "RGBA8",
@@ -44,10 +44,10 @@ data = {
 "width": 16
 }
 
-[sub_resource type="ImageTexture" id="ImageTexture_ep2f3"]
-image = SubResource("Image_d3c61")
+[sub_resource type="ImageTexture" id="ImageTexture_gk1qs"]
+image = SubResource("Image_unbvd")
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0gvdm"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_k0fea"]
 content_margin_left = 4.0
 content_margin_top = 4.0
 content_margin_right = 4.0
@@ -59,7 +59,7 @@ corner_radius_bottom_right = 3
 corner_radius_bottom_left = 3
 corner_detail = 5
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hvvru"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_guot3"]
 content_margin_left = 4.0
 content_margin_top = 4.0
 content_margin_right = 4.0
@@ -94,7 +94,7 @@ layout_mode = 2
 [node name="config_scroll_container" type="ScrollContainer" parent="config_inner/VBoxContainer"]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_styles/panel = SubResource("StyleBoxFlat_4l06h")
+theme_override_styles/panel = SubResource("StyleBoxFlat_0tu10")
 
 [node name="scroll_inner" type="VBoxContainer" parent="config_inner/VBoxContainer/config_scroll_container"]
 layout_mode = 2
@@ -114,20 +114,17 @@ size_flags_horizontal = 3
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="author_btn" type="Button" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner/heading_controls"]
+[node name="repo_btn" type="Button" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner/heading_controls"]
 layout_mode = 2
-text = "  Built by Luxmargos  "
+text = "README"
 
 [node name="Control" type="Control" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner/heading_controls"]
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="repo_btn" type="Button" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner/heading_controls"]
-layout_mode = 2
-
 [node name="donate_btn" type="Button" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner/heading_controls"]
 layout_mode = 2
-text = "  Support  "
+text = "Support Development"
 
 [node name="Control" type="Control" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner"]
 custom_minimum_size = Vector2(0, 15)
@@ -173,8 +170,16 @@ placeholder_text = "Favorites"
 
 [node name="support_context_menu_checkbox" type="CheckBox" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner/options_container/fields/VBoxContainer"]
 layout_mode = 2
-tooltip_text = "This option enables the use of a context popup menu with the right mouse button, implemented through some clever tweaks."
-text = " Support context popup menu (Experimental)"
+tooltip_text = "DFSI mode, implemented through some clever tweaks, introduces additional features. These include a context menu that appears with a right mouse button click, enabling the opening of files handled by the default FileSystem dock.
+Without DFSI mode, Tabby Explorer operates in a read-only mode."
+text = "Activate DFSI mode (Experimental)"
+
+[node name="Label" type="Label" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner/options_container/fields/VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+text = "DFSI mode, implemented through some clever tweaks, introduces additional features. These include a context menu that appears with a right mouse button click, enabling the opening of files handled by the default FileSystem dock.
+Without DFSI mode, Tabby Explorer operates in a read-only mode."
+autowrap_mode = 2
 
 [node name="Control2" type="Control" parent="config_inner/VBoxContainer/config_scroll_container/scroll_inner/options_container"]
 custom_minimum_size = Vector2(0, 30)
@@ -266,12 +271,12 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 text = "  Cancel  "
-icon = SubResource("ImageTexture_ep2f3")
+icon = SubResource("ImageTexture_gk1qs")
 
 [node name="apply_options_btn" type="Button" parent="config_inner/VBoxContainer/bottom_toolbar"]
 layout_mode = 2
 size_flags_horizontal = 3
-theme_override_styles/normal = SubResource("StyleBoxFlat_0gvdm")
-theme_override_styles/hover = SubResource("StyleBoxFlat_hvvru")
+theme_override_styles/normal = SubResource("StyleBoxFlat_k0fea")
+theme_override_styles/hover = SubResource("StyleBoxFlat_guot3")
 text = "  Apply  "
-icon = SubResource("ImageTexture_ep2f3")
+icon = SubResource("ImageTexture_gk1qs")

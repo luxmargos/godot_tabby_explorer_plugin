@@ -10,9 +10,9 @@ const SubFSTextHelper := preload("./utils/text_helper.gd")
 func create_new_dock(p_as_unique_name:bool)->SubFSDockPref:
 	var dock_pref:SubFSDockPref = SubFSDockPref.new()
 	if p_as_unique_name:
-		dock_pref.name = get_unique_dock_name("Sub FileSystem")
+		dock_pref.name = get_unique_dock_name("Tabby Explorer")
 	else:
-		dock_pref.name = "Sub FileSystem"
+		dock_pref.name = "Tabby Explorer"
 	return dock_pref
 
 static func get_dock_name(p_dock:SubFSDockPref)->String:

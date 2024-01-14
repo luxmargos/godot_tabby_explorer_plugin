@@ -239,16 +239,27 @@ func _on_tree_gui_input(p_input:InputEvent):
 		return
 	if mouse_input.button_index == MOUSE_BUTTON_WHEEL_RIGHT:
 		return
-	
 	if mouse_input.button_index == MOUSE_BUTTON_RIGHT:
 		pass
 		
 func _on_tree_item_activated():
 	if !has_selected_item():
 		return
-
+	
 	# this means double clicked!
 	var sel_item:SubFSTreeItemWrapper = get_selected_item()
+	
+	if _is_dfs_mode() and !sel_item.is_dir():
+		_default_fs_navigate(get_selected_item().get_path())
+		if _fs_share.dfsi_mode_helper.is_split_mode:
+			var dfs_selection = _fs_share.dfsi_mode_helper.file_list.get_selected_items()
+			if !dfs_selection.is_empty():
+				_fs_share.dfsi_mode_helper.file_list.item_activated.emit(dfs_selection[0])
+				return
+		else:
+			_fs_share.dfsi_mode_helper.tree.item_activated.emit()
+			return
+
 	var tree_item:TreeItem = sel_item.get_tree_item()
 	if sel_item.is_dir():
 		tree_item.collapsed = !tree_item.collapsed
