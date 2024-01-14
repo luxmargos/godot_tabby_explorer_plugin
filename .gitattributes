@@ -14,5 +14,7 @@
 /LICENSE            export-ignore
 /icon.svg           export-ignore
 /icon.svg.import    export-ignore
+/icon.png           export-ignore
+/icon.png.import    export-ignore
 /project.godot      export-ignore
 /doc                export-ignore
