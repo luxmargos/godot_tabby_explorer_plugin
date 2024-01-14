@@ -1,5 +1,7 @@
 # Tabby Explorer plugin for Godot
 
+<img src="./icon.png" width="100" />
+
 Tabby Explorer is a plugin for the Godot Editor.
 
 While Godot Editor is excellent, it offers only a single FileSystem dock. 
