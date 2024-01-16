@@ -18,33 +18,37 @@ var _pref:SubFSPref
 var _user_docks_pref:SubFSMainPref
 var _project_shared_docks_pref:SubFSMainPref 
 
-const PREF_DIR_NAME:String = ".tabby_explorer_pref"
-const PREF_DIR:String = "res://" + PREF_DIR_NAME
 const PREF_FILE_NAME:String ="tabby_explorer_pref.tres"
-const PREF_FILE:String = PREF_DIR + "/" + PREF_FILE_NAME
-const PREF_FILE_IGNORE:String = PREF_DIR + "/" + ".gitignore" 
 
+const OLD_PREF_DIR_NAME:String = ".tabby_explorer_pref"
+const OLD_PREF_DIR:String = "res://" + OLD_PREF_DIR_NAME
+const OLD_PREF_FILE:String = OLD_PREF_DIR + "/" + PREF_FILE_NAME
+
+const PREF_DIR_NAME:String = "tabby_explorer_pref"
 const MAIN_PREF_FILE_NAME:String = "tabby_explorer_main_pref.tres"
 
 var _all_docks:Array[SubFSDock]
 var _fs_manager_node:SubFSManagerNode
 var _sub_fs_share:SubFSShare
+var _pref_path:String
 
 func _get_pref()->SubFSPref:
-	if _pref == null:
-		if ResourceLoader.exists(PREF_FILE):
-			_pref = ResourceLoader.load(PREF_FILE)
-		else:
-			if !DirAccess.dir_exists_absolute(PREF_DIR):
-				DirAccess.make_dir_recursive_absolute(PREF_DIR)
+	if _pref_path == null or _pref_path.is_empty():
+		_pref_path = _get_pref_path()
 
-				if !ResourceLoader.exists(PREF_FILE_IGNORE):
-					var git_ignore:FileAccess = FileAccess.open(PREF_FILE_IGNORE, FileAccess.WRITE)
-					git_ignore.store_string(PREF_FILE_NAME)
-					git_ignore.close()
+	if _pref == null:
+		if ResourceLoader.exists(_pref_path):
+			# print("LOAD PREF_FILE : ", _pref_path)
+			_pref = ResourceLoader.load(_pref_path)
+		else:
+			var pref_dir:String = _get_pref_dir()
+			# print("LOAD PREF_FILE : ", pref_dir)
+			if !DirAccess.dir_exists_absolute(pref_dir):
+				DirAccess.make_dir_recursive_absolute(pref_dir)
 
 			_pref = SubFSPref.new()
-			_pref.resource_path = PREF_FILE
+			_pref.resource_path = _pref_path
+			# print("SAVE PREF : ", _pref.resource_path)
 			ResourceSaver.save(_pref)
 
 	return _pref
@@ -58,6 +62,14 @@ func _save_user_docks_pref():
 func _save_project_shared_docks_pref():
 	ResourceSaver.save(_get_project_shared_docks_pref())
 
+func _get_pref_dir()->String:
+	var ei:EditorInterface = get_editor_interface()
+	var ep:EditorPaths = ei.get_editor_paths()
+	return ep.get_project_settings_dir() + "/" + PREF_DIR_NAME
+
+func _get_pref_path()->String:
+	return _get_pref_dir() + "/" + PREF_FILE_NAME
+
 func _get_user_docks_pref_save_dir()->String:
 	var ei:EditorInterface = get_editor_interface()
 	var ep:EditorPaths = ei.get_editor_paths()
@@ -68,8 +80,8 @@ func _get_user_docks_pref_save_dir()->String:
 	
 	return ep.get_project_settings_dir() + "/" + PREF_DIR_NAME
 	
-func _get_project_shared_docks_pref_save_dir()->String:
-	return PREF_DIR
+func _get_user_docks_pref_save_path()->String:
+	return _get_user_docks_pref_save_dir() + "/" + MAIN_PREF_FILE_NAME
 
 func _get_user_docks_pref()->SubFSMainPref:
 	if _user_docks_pref != null:
@@ -78,20 +90,22 @@ func _get_user_docks_pref()->SubFSMainPref:
 	var target_dir:String = _get_user_docks_pref_save_dir()
 	if !DirAccess.dir_exists_absolute(target_dir):
 		DirAccess.make_dir_recursive_absolute(target_dir)
-		
-	var target_file:String = target_dir + "/" + MAIN_PREF_FILE_NAME
+
+	var target_file:String = _get_user_docks_pref_save_path()
 	_user_docks_pref = _load_main_pref(target_file)
 	return _user_docks_pref
+
+func _get_project_shared_docks_pref_save_path()->String:
+	var target_dir := _get_pref().get_resolved_project_shared_pref_dir()
+	if !DirAccess.dir_exists_absolute(target_dir):
+		DirAccess.make_dir_recursive_absolute(target_dir)
+	return target_dir + MAIN_PREF_FILE_NAME
 
 func _get_project_shared_docks_pref()->SubFSMainPref:
 	if _project_shared_docks_pref != null:
 		return _project_shared_docks_pref
 
-	var target_dir:String = _get_project_shared_docks_pref_save_dir()
-	if !DirAccess.dir_exists_absolute(target_dir):
-		DirAccess.make_dir_recursive_absolute(target_dir)
-		
-	var target_file:String = target_dir + "/" + MAIN_PREF_FILE_NAME
+	var target_file:String = _get_project_shared_docks_pref_save_path()
 	_project_shared_docks_pref = _load_main_pref(target_file)
 	return _project_shared_docks_pref
 		
@@ -110,7 +124,66 @@ func _load_main_pref(p_path:String)->SubFSMainPref:
 
 	return result
 
+func _migrate_old_version():
+	var ei:EditorInterface = get_editor_interface()
+	var ep:EditorPaths = ei.get_editor_paths()
+	
+	var old_user_pref_path := ep.get_project_settings_dir() + "/" + OLD_PREF_DIR_NAME + "/" + MAIN_PREF_FILE_NAME
+	if ResourceLoader.exists(old_user_pref_path):
+		var old_pref:SubFSMainPref = ResourceLoader.load(old_user_pref_path)
+		if old_pref != null:
+			var new_pref_path = _get_user_docks_pref_save_path()
+			if !ResourceLoader.exists(new_pref_path):
+				print("Tabby Explorer: migrate user pref: ", old_user_pref_path, "\n->", new_pref_path)
+				var migrated_pref:SubFSMainPref = old_pref.duplicate(true) as SubFSMainPref
+				migrated_pref.resource_path = new_pref_path
+				ResourceSaver.save(migrated_pref)
+				
+		DirAccess.remove_absolute(old_user_pref_path)
+
+	if DirAccess.dir_exists_absolute(OLD_PREF_DIR):
+		if ResourceLoader.exists(OLD_PREF_FILE):
+			var old_pref:SubFSPref = ResourceLoader.load(OLD_PREF_FILE)
+			if old_pref:
+				var new_pref_path = _get_pref_path()
+				if !ResourceLoader.exists(new_pref_path):
+					print("Tabby Explorer: migrate user pref: ", OLD_PREF_FILE, "\n->", new_pref_path)
+					var migrated_pref:SubFSPref = old_pref.duplicate(true) as SubFSPref
+					migrated_pref.fix_error()
+					migrated_pref.resource_path = new_pref_path
+					ResourceSaver.save(migrated_pref)
+					
+		var old_proj_pref_path = OLD_PREF_DIR + "/" + MAIN_PREF_FILE_NAME
+		if ResourceLoader.exists(old_proj_pref_path):
+			var old_proj_pref:SubFSMainPref = ResourceLoader.load(old_proj_pref_path)
+			if old_proj_pref:
+				var new_proj_pref_path:String = _get_project_shared_docks_pref_save_path()
+				if !ResourceLoader.exists(new_proj_pref_path):
+					print("Tabby Explorer: migrate user pref: ", old_proj_pref_path, "\n->", new_proj_pref_path)
+					var migrated_proj_pref:SubFSMainPref = old_proj_pref.duplicate(true) as SubFSMainPref
+					migrated_proj_pref.resource_path = new_proj_pref_path
+					ResourceSaver.save(migrated_proj_pref)
+
+		for f in DirAccess.get_files_at(OLD_PREF_DIR):
+			var remove_target := OLD_PREF_DIR +"/"+f
+			print("Tabby Explorer: Remove old file : ", remove_target)
+			var err := DirAccess.remove_absolute(remove_target)
+			if err:
+				err = OS.move_to_trash(ProjectSettings.globalize_path(remove_target))
+				if err:
+					print("Tabby explorer: migration error occured on delete file. You can remove this file yourself. ", remove_target)
+					
+		DirAccess.remove_absolute(OLD_PREF_DIR)
+
 func _enter_tree():
+	if !DirAccess.dir_exists_absolute(_get_pref_dir()):
+		DirAccess.make_dir_recursive_absolute(_get_pref_dir())
+	
+	if !DirAccess.dir_exists_absolute(_get_user_docks_pref_save_dir()):
+		DirAccess.make_dir_recursive_absolute(_get_user_docks_pref_save_dir())
+
+	_migrate_old_version()
+
 	if _sub_fs_share == null:
 		_sub_fs_share = SubFSShare.new(get_editor_interface())
 		_sub_fs_share.check_dfsi_mode_availability()

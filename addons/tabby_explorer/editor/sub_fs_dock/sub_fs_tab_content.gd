@@ -311,7 +311,7 @@ func _update_selection(p_item:TreeItem, p_column: int, p_selected: bool, p_by_cl
 		_selected_items[wrapper.get_instance_id()] = wrapper
 		_selected_item = wrapper
 		
-		set_selected_path(_selected_item.get_path(), true)
+		set_selected_path(_selected_item.get_path(), p_by_click)
 		
 		if p_by_click and _tab_pref.always_post_selection_to_fs_dock:
 			_default_fs_navigate(_selected_item.get_path())
@@ -436,7 +436,7 @@ func reset_list(p_tag:String):
 	if root_fs_item == null:
 		return
 		
-#	print(get_instance_id(), ", start reset_list : ", p_tag)
+	#print(get_instance_id(), ", start reset_list : ", p_tag)
 
 	_root_wrapper = null
 	var tab_root_item:SubFSItem = null
@@ -536,7 +536,7 @@ func set_selected_path(p_path:String, p_notify:bool):
 	if _tab_pref == null:
 		return
 	
-#	print(pref.name, ", set_selected_path : ", p_path)
+	#print(_tab_pref.name, ", set_selected_path : ", p_path, ",", p_notify)
 	
 	_selected_path = p_path
 	refresh_selected_path()

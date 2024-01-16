@@ -17,8 +17,17 @@ const DEFAULT_FAVORITES_DOCK_NAME = "Favorites"
 
 @export var use_project_shared_config:bool = false
 @export var project_shared_config_prefix:String = "[P] "
+@export var project_shared_pref_dir:String
 
 @export var saved_tab_selections:Dictionary
+
+func get_resolved_project_shared_pref_dir()->String:
+	var result = project_shared_pref_dir
+	if !result.begins_with("res://"):
+		result = "res://" + result
+	if !result.ends_with("/"):
+		result = result + "/"
+	return result
 
 func get_saved_selection(p_tab_id:int)->String:
 	return saved_tab_selections.get(p_tab_id, "")

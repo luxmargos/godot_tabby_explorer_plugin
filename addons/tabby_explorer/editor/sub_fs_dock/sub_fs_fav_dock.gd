@@ -15,6 +15,11 @@ func _refresh_view_state():
 	if _no_folders_label == null:
 		_no_folders_label = get_node("no_folders_label")
 	_no_folders_label.visible = !_tab_bar_wrapper.visible
+
+func show_config():
+	super.show_config()
+	_no_folders_label.visible = false
+	
 	
 func apply_pref():
 	_allow_empty_tabs = true

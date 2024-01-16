@@ -1,6 +1,7 @@
 # project ignores
 .sub_fs_pref
 .tabby_explorer_pref
+tabby_explorer_main_pref.tres
 
 #vscode
 .vscode
